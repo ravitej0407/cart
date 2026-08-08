@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuickMart - Groceries delivered to your doorstep in minutes">
+  <title>QuickMart | Groceries Delivered Fast</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header / Navbar -->
+  <header class="header" id="header">
+    <div class="header-top">
+      <div class="container header-inner">
+        <a href="#" class="logo" aria-label="QuickMart Home">
+          <img src="images/logo.png" alt="QuickMart logo" class="logo-img">
+          <span class="logo-text">QuickMart</span>
+        </a>
+
+        <button class="location-btn" type="button" aria-label="Change delivery location">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"/>
+            <circle cx="12" cy="10" r="2.5"/>
+          </svg>
+          <span class="location-text">
+            <small>Delivery to</small>
+            <strong>Home - Mumbai</strong>
+          </span>
+          <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+
+        <p class="delivery-badge">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          Delivery in <strong>10 minutes</strong>
+        </p>
+
+        <div class="header-actions">
+          <button class="btn-login" id="loginBtn" type="button">Login</button>
+          <button class="btn-cart" id="cartBtn" type="button" aria-label="Open cart">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="cart-count" id="cartCount">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-search">
+      <div class="container">
+        <div class="search-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            type="search"
+            id="searchInput"
+            class="search-input"
+            placeholder='Search for "milk", "bread", "fruits"...'
+            autocomplete="off"
+            aria-label="Search products"
+          >
+          <button class="search-clear hidden" id="searchClear" type="button" aria-label="Clear search">&times;</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Category Navigation -->
+  <nav class="category-nav" id="categoryNav" aria-label="Product categories">
+    <div class="container">
+      <div class="category-scroll" id="categoryScroll"></div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="hero-tag">India's fastest grocery delivery</span>
+          <h1>Groceries delivered to your doorstep</h1>
+          <p>Fresh products. Great prices. Fast delivery.</p>
+          <button class="btn-primary" id="shopNowBtn" type="button">Shop Now</button>
+        </div>
+        <div class="hero-image">
+          <img src="images/banner.jpg" alt="Fresh groceries delivery banner with fruits and vegetables">
+        </div>
+      </div>
+    </section>
+
+    <!-- Offers Section -->
+    <section class="offers" id="offers">
+      <div class="container">
+        <h2 class="section-title">Offers for you</h2>
+        <div class="offers-grid">
+          <article class="offer-card offer-card--purple">
+            <span class="offer-badge">20% OFF</span>
+            <h3>On your first order</h3>
+            <p>Use code <strong>FIRST20</strong> at checkout</p>
+          </article>
+          <article class="offer-card offer-card--pink">
+            <span class="offer-badge">FREE DELIVERY</span>
+            <h3>On orders above ₹299</h3>
+            <p>No delivery fee on qualifying orders</p>
+          </article>
+          <article class="offer-card offer-card--gradient">
+            <span class="offer-badge">SPECIAL OFFER</span>
+            <h3>Save more on groceries</h3>
+            <p>Up to 40% off on daily essentials</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Results / No Products Message -->
+    <section class="search-results container hidden" id="searchResultsSection">
+      <h2 class="section-title" id="searchResultsTitle">Search Results</h2>
+      <div class="products-grid" id="searchResultsGrid"></div>
+      <p class="no-products hidden" id="noProductsMsg">No products found. Try a different search term.</p>
+    </section>
+
+    <!-- Product Sections (dynamically rendered) -->
+    <div id="productSections"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Help</h3>
+        <ul>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Delivery Information</a></li>
+          <li><a href="#">Payment Options</a></li>
+          <li><a href="#">Customer Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Social Media</h3>
+        <ul class="social-links">
+          <li><a href="#" aria-label="Instagram">Instagram</a></li>
+          <li><a href="#" aria-label="Facebook">Facebook</a></li>
+          <li><a href="#" aria-label="X">X</a></li>
+          <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 Grocery Clone. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart Sidebar -->
+  <aside class="cart-overlay hidden" id="cartOverlay" aria-hidden="true"></aside>
+  <aside class="cart-sidebar" id="cartSidebar" aria-label="Shopping cart" aria-hidden="true">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="cart-close" id="cartClose" type="button" aria-label="Close cart">&times;</button>
+    </div>
+    <div class="cart-body" id="cartBody">
+      <p class="cart-empty" id="cartEmpty">Your cart is empty. Add some groceries!</p>
+      <ul class="cart-items" id="cartItems"></ul>
+    </div>
+    <div class="cart-footer" id="cartFooter">
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotal">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span id="cartDelivery">₹20</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>Total</span>
+          <span id="cartTotal">₹0</span>
+        </div>
+      </div>
+      <button class="btn-checkout" id="checkoutBtn" type="button">Proceed to Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Login Modal -->
+  <div class="modal-overlay hidden" id="loginOverlay" aria-hidden="true"></div>
+  <dialog class="login-modal" id="loginModal" aria-labelledby="loginTitle">
+    <button class="modal-close" id="loginClose" type="button" aria-label="Close login">&times;</button>
+    <h2 id="loginTitle">Login / Sign Up</h2>
+    <p class="modal-subtitle">Enter your mobile number to continue</p>
+    <form id="loginForm" novalidate>
+      <label for="mobileInput">Mobile Number</label>
+      <div class="mobile-input-wrapper">
+        <span class="country-code">+91</span>
+        <input
+          type="tel"
+          id="mobileInput"
+          placeholder="Enter 10-digit mobile number"
+          maxlength="10"
+          pattern="[0-9]{10}"
+          required
+        >
+      </div>
+      <p class="form-error hidden" id="loginError">Please enter a valid 10-digit mobile number.</p>
+      <button class="btn-primary btn-full" type="submit">Continue</button>
+    </form>
+  </dialog>
+
+  <!-- Mobile Menu Toggle (optional compact nav) -->
+  <button class="mobile-menu-btn hidden" id="mobileMenuBtn" type="button" aria-label="Toggle menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M3 12h18M3 6h18M3 18h18"/>
+    </svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
