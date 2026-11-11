@@ -1,5 +1,62 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#bdc3c7" rx="16"/>
-  <rect x="20" y="20" width="260" height="200" fill="rgba(255,255,255,0.25)" rx="12"/>
-  <text x="150" y="260" font-family="Arial,sans-serif" font-size="18" fill="#333" text-anchor="middle" font-weight="600">Trust Sugar</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="tsBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f7f9"/>
+      <stop offset="100%" stop-color="#d9ebf1"/>
+    </linearGradient>
+    <linearGradient id="tsPack" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#fbfbfd"/>
+      <stop offset="100%" stop-color="#edf2f7"/>
+    </linearGradient>
+    <linearGradient id="tsBanner" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0052cc"/>
+      <stop offset="100%" stop-color="#0080ff"/>
+    </linearGradient>
+    <filter id="tsShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#091e42" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  
+  <rect width="300" height="300" rx="16" fill="url(#tsBg)"/>
+  
+  <!-- Sugar Pouch -->
+  <g filter="url(#tsShadow)">
+    <path d="M 85 60 L 215 60 L 225 240 C 225 248 218 252 210 252 L 90 252 C 82 252 75 248 75 240 Z" fill="url(#tsPack)" stroke="#cbd5e1" stroke-width="2"/>
+    <!-- Top Seal Crimps -->
+    <rect x="80" y="52" width="140" height="12" rx="3" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="88" y1="52" x2="88" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="98" y1="52" x2="98" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="108" y1="52" x2="108" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="118" y1="52" x2="118" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="182" y1="52" x2="182" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="192" y1="52" x2="192" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="202" y1="52" x2="202" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="212" y1="52" x2="212" y2="64" stroke="#94a3b8" stroke-width="1.5"/>
+    
+    <!-- Blue Brand Banner -->
+    <rect x="75" y="95" width="150" height="48" fill="url(#tsBanner)"/>
+    <text x="150" y="128" font-family="'Segoe UI',-apple-system,sans-serif" font-size="24" font-weight="900" fill="#ffffff" letter-spacing="3" text-anchor="middle">TRUST</text>
+    
+    <!-- Sulphurless Subtitle -->
+    <rect x="100" y="148" width="100" height="16" rx="8" fill="#e0f2fe"/>
+    <text x="150" y="160" font-family="'Segoe UI',sans-serif" font-size="9" font-weight="700" fill="#0284c7" letter-spacing="1" text-anchor="middle">SULPHURLESS</text>
+    
+    <!-- Sugar Crystals Illustration Window -->
+    <circle cx="150" cy="195" r="28" fill="#f8fafc" stroke="#38bdf8" stroke-width="2"/>
+    <!-- Sugar Crystals / Sparkles -->
+    <g fill="#38bdf8">
+      <polygon points="150,175 153,181 160,183 154,188 156,195 150,191 144,195 146,188 140,183 147,181" transform="scale(0.6) translate(100, 130)" fill="#60a5fa"/>
+      <polygon points="150,175 153,181 160,183 154,188 156,195 150,191 144,195 146,188 140,183 147,181" transform="scale(0.4) translate(195, 260)" fill="#38bdf8"/>
+      <polygon points="150,175 153,181 160,183 154,188 156,195 150,191 144,195 146,188 140,183 147,181" transform="scale(0.45) translate(145, 230)" fill="#93c5fd"/>
+    </g>
+    <!-- Sparkling Sugar Granules -->
+    <rect x="135" y="196" width="5" height="5" rx="1" fill="#bae6fd" transform="rotate(45 137 198)"/>
+    <rect x="156" y="202" width="6" height="6" rx="1" fill="#7dd3fc" transform="rotate(30 159 205)"/>
+    <rect x="146" y="208" width="5" height="5" rx="1" fill="#bae6fd" transform="rotate(15 148 210)"/>
+    <rect x="160" y="188" width="4" height="4" rx="1" fill="#38bdf8" transform="rotate(45 162 190)"/>
+
+    <!-- Bottom Weight / Details -->
+    <text x="150" y="240" font-family="'Segoe UI',sans-serif" font-size="12" font-weight="700" fill="#334155" text-anchor="middle">PURE SUGAR • 1 kg</text>
+  </g>
 </svg>

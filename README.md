@@ -6,15 +6,20 @@ A modern, responsive grocery delivery website built with **HTML**, **CSS**, and 
 
 ## Features
 
-- **Sticky header** with logo, location selector, delivery badge, search, login, and cart
+- **Custom Delivery Location Management** — click the delivery location in the header to choose from saved addresses, detect current location via GPS, or add any desired delivery location of your choice with flat/house, area, city, pincode, and custom tags (Home/Work/Other); saved in `localStorage`
+- **Dark Mode & Light Mode** — toggle theme with smooth transitions, persistent `localStorage` support, and system preference detection
+- **Online Product Images** — high-resolution Unsplash grocery photo links for all 43 products with graceful local SVG fallbacks
+- **Dedicated Login & Sign Up Page (`login.html`)** — tabbed authentication with Mobile OTP (interactive 4-digit code entry & timer), Email/Password, Sign Up, and Social Logins (Google & Apple)
+- **User Session & Profile State** — remembers authenticated user, dynamic header user profile badge with dropdown menu & logout
+- **Sticky header** with logo, location selector, delivery badge, search, dark mode toggle, login/profile, and cart
 - **Live product search** — filter by name, category, or section without page reload
 - **Category navigation** — 15 scrollable categories with active highlight
 - **43 products** across 11 sections, rendered dynamically from JavaScript
 - **Shopping cart** with add/remove, quantity controls, subtotal, delivery fee, and total
 - **Cart sidebar** with smooth slide-in animation
-- **Login modal** with mobile number validation
+- **Quick Login modal** with mobile number validation and direct link to full login page
 - **Offers section** with promotional cards
-- **localStorage persistence** — cart survives page refresh
+- **localStorage persistence** — cart, locations, and user preferences survive page refresh
 - **Fully responsive** — desktop, tablet, and mobile layouts
 
 ## Project Structure
@@ -22,14 +27,16 @@ A modern, responsive grocery delivery website built with **HTML**, **CSS**, and 
 ```text
 zepto-clone/
 │
-├── index.html          # Main HTML structure
-├── style.css           # All styles (CSS variables, responsive)
-├── script.js           # Products, cart, search, filters
+├── index.html          # Main storefront page
+├── login.html          # Dedicated Login & Sign Up page
+├── style.css           # Complete CSS (dark mode variables, store, and auth styles)
+├── script.js           # Products catalog, cart, location selector, live search, theme & user state
+├── login.js            # Login page interactivity (OTP, password, registration)
 │
 ├── images/
 │   ├── logo.png        # Site logo (QuickMart)
-│   ├── banner.jpg      # Hero banner image
-│   ├── products/       # Product images (SVG placeholders)
+│   ├── banner.jpg      # Hero section grocery delivery banner
+│   ├── products/       # Local fallback SVG & JPG product images
 │   └── categories/     # Category icon images (SVG)
 │
 └── README.md

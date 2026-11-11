@@ -1,5 +1,58 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#ca6f1e" rx="16"/>
-  <rect x="20" y="20" width="260" height="200" fill="rgba(255,255,255,0.25)" rx="12"/>
-  <text x="150" y="260" font-family="Arial,sans-serif" font-size="18" fill="#333" text-anchor="middle" font-weight="600">Gingelly Oil</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="gngBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="gngOil" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="30%" stop-color="#d97706"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+    <linearGradient id="gngCap" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+    <filter id="gngShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#78350f" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="300" height="300" rx="16" fill="url(#gngBg)"/>
+
+  <g filter="url(#gngShadow)">
+    <!-- Red Cap -->
+    <rect x="134" y="38" width="32" height="20" rx="3" fill="url(#gngCap)" stroke="#7f1d1d" stroke-width="1.5"/>
+    <rect x="130" y="58" width="40" height="6" rx="2" fill="#ef4444"/>
+
+    <!-- Clear Glass / Amber Gingelly Oil Bottle -->
+    <path d="M 136 64 L 132 96 Q 106 114 104 140 L 104 240 Q 104 254 118 256 L 182 256 Q 196 254 196 240 L 196 140 Q 194 114 168 96 L 164 64 Z" fill="url(#gngOil)" stroke="#78350f" stroke-width="1.5"/>
+
+    <!-- White Traditional Label -->
+    <rect x="110" y="128" width="80" height="92" rx="4" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+
+    <!-- Traditional Red Border Line -->
+    <rect x="114" y="132" width="72" height="84" rx="2" fill="none" stroke="#ef4444" stroke-width="1"/>
+
+    <!-- Brand Name -->
+    <text x="150" y="152" font-family="'Segoe UI',sans-serif" font-size="14" font-weight="900" fill="#991b1b" text-anchor="middle" letter-spacing="1">GINGELLY</text>
+    <text x="150" y="164" font-family="'Segoe UI',sans-serif" font-size="9" font-weight="800" fill="#b45309" text-anchor="middle" letter-spacing="0.5">SESAME OIL</text>
+
+    <!-- Sesame Seeds & Oil Drop Icon -->
+    <g transform="translate(150, 185)">
+      <!-- Golden Oil Droplet -->
+      <path d="M 0 -12 C -6 -2 -8 3 -8 7 C -8 11 -4 14 0 14 C 4 14 8 11 8 7 C 8 3 6 -2 0 -12 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+      <circle cx="-2" cy="7" r="2" fill="#fef08a"/>
+      <!-- Sesame seeds surrounding -->
+      <ellipse cx="-16" cy="6" rx="2" ry="4" transform="rotate(-30 -16 6)" fill="#78350f"/>
+      <ellipse cx="16" cy="6" rx="2" ry="4" transform="rotate(30 16 6)" fill="#78350f"/>
+      <ellipse cx="-12" cy="-4" rx="1.8" ry="3.5" transform="rotate(20 -12 -4)" fill="#78350f"/>
+      <ellipse cx="12" cy="-4" rx="1.8" ry="3.5" transform="rotate(-20 12 -4)" fill="#78350f"/>
+    </g>
+
+    <text x="150" y="210" font-family="'Segoe UI',sans-serif" font-size="7.5" font-weight="700" fill="#15803d" text-anchor="middle">COLD PRESSED</text>
+
+    <text x="150" y="244" font-family="'Segoe UI',sans-serif" font-size="10" font-weight="800" fill="#ffffff" text-anchor="middle">500 ml</text>
+  </g>
 </svg>

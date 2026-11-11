@@ -1,5 +1,66 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#27ae60" rx="16"/>
-  <rect x="20" y="20" width="260" height="200" fill="rgba(255,255,255,0.25)" rx="12"/>
-  <text x="150" y="260" font-family="Arial,sans-serif" font-size="18" fill="#333" text-anchor="middle" font-weight="600">Parachute Oil</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="pchBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="pchBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="40%" stop-color="#0369a1"/>
+      <stop offset="70%" stop-color="#075985"/>
+      <stop offset="100%" stop-color="#0c4a6e"/>
+    </linearGradient>
+    <linearGradient id="pchShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.4)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <filter id="pchShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0c4a6e" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="300" height="300" rx="16" fill="url(#pchBg)"/>
+
+  <g filter="url(#pchShadow)">
+    <!-- Flip Cap (Deep Blue) -->
+    <path d="M 135 44 L 165 44 Q 168 44 168 49 L 168 62 L 132 62 L 132 49 Q 132 44 135 44 Z" fill="#0369a1" stroke="#075985" stroke-width="1.5"/>
+    <rect x="130" y="62" width="40" height="6" rx="2" fill="#0284c7"/>
+    <!-- Flip Cap Lip -->
+    <rect x="145" y="40" width="10" height="4" rx="2" fill="#38bdf8"/>
+
+    <!-- Iconic Blue Parachute Bottle Body -->
+    <path d="M 134 68 L 130 96 Q 106 114 104 140 L 104 238 Q 104 252 118 254 L 182 254 Q 196 252 196 238 L 196 140 Q 194 114 170 96 L 166 68 Z" fill="url(#pchBlue)" stroke="#0c4a6e" stroke-width="1.5"/>
+    
+    <!-- Bottle Highlight Shine -->
+    <path d="M 112 135 L 116 135 L 116 235 L 112 235 Z" fill="url(#pchShine)"/>
+
+    <!-- Green Palm Tree Brand Emblem -->
+    <g transform="translate(150, 126)">
+      <!-- Trunk -->
+      <path d="M -2 18 Q 0 4 2 -4 L 4 -4 Q 2 4 1 18 Z" fill="#78350f"/>
+      <!-- Palm Leaves -->
+      <path d="M 0 -4 Q -14 -12 -20 -6 Q -12 2 0 -4 Z" fill="#22c55e"/>
+      <path d="M 0 -4 Q -16 -2 -18 8 Q -10 6 0 -4 Z" fill="#16a34a"/>
+      <path d="M 0 -4 Q 14 -12 20 -6 Q 12 2 0 -4 Z" fill="#22c55e"/>
+      <path d="M 0 -4 Q 16 -2 18 8 Q 10 6 0 -4 Z" fill="#16a34a"/>
+      <path d="M 0 -4 Q 0 -18 6 -18 Q 4 -8 0 -4 Z" fill="#4ade80"/>
+      <!-- Coconut -->
+      <circle cx="-2" cy="0" r="2.5" fill="#451a03"/>
+      <circle cx="3" cy="1" r="2.5" fill="#451a03"/>
+    </g>
+
+    <!-- Brand Name Text -->
+    <text x="150" y="166" font-family="'Segoe UI',sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">Parachute</text>
+    
+    <!-- Subtitle Badge -->
+    <rect x="114" y="174" width="72" height="15" rx="7.5" fill="#ffffff"/>
+    <text x="150" y="185" font-family="'Segoe UI',sans-serif" font-size="8.5" font-weight="800" fill="#0369a1" text-anchor="middle">100% PURE</text>
+
+    <!-- Pure Coconut Oil Text -->
+    <text x="150" y="206" font-family="'Segoe UI',sans-serif" font-size="11" font-weight="700" fill="#bae6fd" text-anchor="middle">COCONUT OIL</text>
+    <text x="150" y="218" font-family="'Segoe UI',sans-serif" font-size="8" font-weight="600" fill="#7dd3fc" text-anchor="middle">HAIRCARE NOURISHMENT</text>
+
+    <!-- Volume -->
+    <text x="150" y="244" font-family="'Segoe UI',sans-serif" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">200 ml</text>
+  </g>
 </svg>

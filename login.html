@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuickMart - Login or Sign Up for 10-minute grocery delivery">
+  <title>Login / Sign Up | QuickMart</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('quickmart_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+<body class="auth-page">
+
+  <!-- Auth Header -->
+  <header class="auth-header">
+    <div class="container auth-header-inner">
+      <a href="index.html" class="logo" aria-label="QuickMart Home">
+        <img src="images/logo.png" alt="QuickMart logo" class="logo-img">
+        <span class="logo-text">QuickMart</span>
+      </a>
+
+      <div class="auth-header-actions">
+        <!-- Theme Toggle Button -->
+        <button class="btn-theme" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Toggle theme">
+          <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon icon-sun hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+
+        <a href="index.html" class="auth-back-link" aria-label="Back to grocery shopping">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back to Store
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Main -->
+  <main class="auth-main">
+    <div class="auth-container">
+
+      <!-- Feature Badges -->
+      <div class="auth-features-strip">
+        <div class="feature-pill">
+          <span>⚡</span> 10-Min Delivery
+        </div>
+        <div class="feature-pill">
+          <span>🛡️</span> 100% Genuine
+        </div>
+        <div class="feature-pill">
+          <span>🎁</span> Flat ₹100 Off
+        </div>
+      </div>
+
+      <!-- Active Session Card (if user is already logged in) -->
+      <section class="auth-card hidden" id="loggedInCard">
+        <div class="auth-logged-in-card">
+          <div class="logged-in-avatar" id="activeAvatar">U</div>
+          <h2 class="logged-in-name" id="activeName">Welcome Back</h2>
+          <p class="logged-in-detail" id="activeDetail">You are already signed in to QuickMart</p>
+          <div class="logged-in-actions">
+            <a href="index.html" class="btn-primary btn-full">Continue Shopping &rarr;</a>
+            <button class="btn-outline-action" id="switchAccountBtn" type="button">Sign In to Different Account</button>
+            <button class="btn-remove" id="activeLogoutBtn" type="button" style="margin-top: 8px;">Log Out</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Auth Card (Sign In / Register) -->
+      <section class="auth-card" id="authCard">
+        <header class="auth-card-header">
+          <h1>Welcome to QuickMart</h1>
+          <p>India's fastest daily grocery & fresh essentials delivery</p>
+        </header>
+
+        <!-- Auth Tabs -->
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab active" id="tabOtpBtn" role="tab" aria-selected="true" type="button">Mobile OTP</button>
+          <button class="auth-tab" id="tabPasswordBtn" role="tab" aria-selected="false" type="button">Password</button>
+          <button class="auth-tab" id="tabSignupBtn" role="tab" aria-selected="false" type="button">Sign Up</button>
+        </div>
+
+        <!-- Tab 1: Mobile OTP -->
+        <div class="tab-content" id="tabOtpContent">
+          <!-- Step 1: Request Mobile Number -->
+          <form id="otpPhoneForm" novalidate>
+            <div class="form-group">
+              <label for="authMobileInput">Mobile Number</label>
+              <div class="mobile-input-wrapper">
+                <span class="country-code">+91</span>
+                <input
+                  type="tel"
+                  id="authMobileInput"
+                  placeholder="Enter 10-digit mobile number"
+                  maxlength="10"
+                  pattern="[0-9]{10}"
+                  required
+                  autocomplete="tel"
+                >
+              </div>
+              <p class="form-error hidden" id="authMobileError">Please enter a valid 10-digit Indian mobile number.</p>
+            </div>
+            <button class="btn-primary btn-full" type="submit">Get Verification Code</button>
+          </form>
+
+          <!-- Step 2: Enter OTP (Hidden by default) -->
+          <form id="otpVerifyForm" class="hidden" novalidate>
+            <div class="form-group" style="text-align: center;">
+              <label>Enter 4-digit OTP</label>
+              <p class="otp-timer">
+                Sent to <strong id="otpDisplayPhone">+91 XXXXXXXXXX</strong>
+                (<button type="button" class="resend-otp-btn" id="changePhoneBtn">Change</button>)
+              </p>
+              <div class="otp-box-group">
+                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" required autofocus>
+                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" class="otp-digit" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+              </div>
+              <p class="otp-timer">
+                <span id="timerText">Resend OTP in <strong id="resendTimer">28</strong>s</span>
+                <button type="button" class="resend-otp-btn hidden" id="resendOtpBtn">Resend OTP</button>
+              </p>
+              <p class="form-error hidden" id="otpError">Please enter all 4 digits.</p>
+            </div>
+            <button class="btn-primary btn-full" type="submit">Verify & Sign In</button>
+          </form>
+        </div>
+
+        <!-- Tab 2: Email & Password -->
+        <div class="tab-content hidden" id="tabPasswordContent">
+          <form id="passwordLoginForm" novalidate>
+            <div class="form-group">
+              <label for="authEmailInput">Email or Mobile</label>
+              <input
+                type="text"
+                id="authEmailInput"
+                class="form-input"
+                placeholder="name@example.com"
+                required
+                autocomplete="username"
+              >
+            </div>
+            <div class="form-group">
+              <label for="authPasswordInput">Password</label>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="authPasswordInput"
+                  class="form-input"
+                  placeholder="Enter your password"
+                  required
+                  autocomplete="current-password"
+                >
+                <button type="button" class="toggle-password-btn" aria-label="Toggle password visibility">
+                  <svg class="icon icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="form-row-between">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rememberMe" checked>
+                <span>Remember me</span>
+              </label>
+              <button type="button" class="forgot-link" id="forgotPasswordBtn">Forgot?</button>
+            </div>
+            <p class="form-error hidden" id="passwordLoginError">Please enter both your email and password.</p>
+            <button class="btn-primary btn-full" type="submit">Sign In</button>
+          </form>
+        </div>
+
+        <!-- Tab 3: Sign Up -->
+        <div class="tab-content hidden" id="tabSignupContent">
+          <form id="signupForm" novalidate>
+            <div class="form-group">
+              <label for="signupName">Full Name</label>
+              <input type="text" id="signupName" class="form-input" placeholder="e.g. Rahul Sharma" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="signupPhone">Mobile Number</label>
+              <div class="mobile-input-wrapper">
+                <span class="country-code">+91</span>
+                <input type="tel" id="signupPhone" placeholder="10-digit mobile number" maxlength="10" required autocomplete="tel">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="signupEmail">Email Address</label>
+              <input type="email" id="signupEmail" class="form-input" placeholder="rahul@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Create Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="signupPassword" class="form-input" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password">
+                <button type="button" class="toggle-password-btn" aria-label="Toggle password visibility">
+                  <svg class="icon icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p class="form-error hidden" id="signupError">Please fill out all fields with valid information.</p>
+            <button class="btn-primary btn-full" type="submit">Create QuickMart Account</button>
+          </form>
+        </div>
+
+        <!-- Social Login Divider -->
+        <div class="social-divider">
+          <span>Or sign in with</span>
+        </div>
+
+        <!-- Social Buttons -->
+        <div class="social-buttons">
+          <button class="btn-social" id="googleLoginBtn" type="button">
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            Google
+          </button>
+          <button class="btn-social" id="appleLoginBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.87c.66-.82 1.11-1.96.99-3.1-.96.04-2.13.65-2.82 1.46-.61.71-1.15 1.88-.99 2.99 1.08.08 2.17-.53 2.82-1.35z"/>
+            </svg>
+            Apple
+          </button>
+        </div>
+
+        <p class="terms-note">
+          By signing in, you agree to QuickMart's
+          <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>.
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>
+

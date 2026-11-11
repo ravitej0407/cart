@@ -9,6 +9,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('quickmart_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
 
@@ -21,14 +30,14 @@
           <span class="logo-text">QuickMart</span>
         </a>
 
-        <button class="location-btn" type="button" aria-label="Change delivery location">
+        <button class="location-btn" id="locationBtn" type="button" aria-label="Change delivery location" aria-haspopup="dialog">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"/>
             <circle cx="12" cy="10" r="2.5"/>
           </svg>
           <span class="location-text">
             <small>Delivery to</small>
-            <strong>Home - Mumbai</strong>
+            <strong id="headerLocationText">Home - Bandra West</strong>
           </span>
           <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M6 9l6 6 6-6"/>
@@ -44,7 +53,52 @@
         </p>
 
         <div class="header-actions">
-          <button class="btn-login" id="loginBtn" type="button">Login</button>
+          <!-- Dark Mode Toggle Button -->
+          <button class="btn-theme" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Toggle theme">
+            <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon icon-sun hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          </button>
+
+          <!-- User Profile Menu (shown when logged in) -->
+          <div class="user-profile-menu hidden" id="userProfileMenu">
+            <button class="btn-user-profile" id="userProfileBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="User account menu">
+              <span class="user-avatar" id="userAvatar">U</span>
+              <span class="user-name" id="userName">User</span>
+              <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+            <div class="user-dropdown hidden" id="userDropdown">
+              <div class="dropdown-header">
+                <strong id="dropdownUserName">User</strong>
+                <small id="dropdownUserPhone">+91 00000 00000</small>
+              </div>
+              <hr class="dropdown-divider">
+              <a href="login.html" class="dropdown-item">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Account & Switch
+              </a>
+              <button class="dropdown-item dropdown-logout" id="logoutBtn" type="button">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Log Out
+              </button>
+            </div>
+          </div>
+
+          <a href="login.html" class="btn-login" id="loginBtn">Login</a>
+
           <button class="btn-cart" id="cartBtn" type="button" aria-label="Open cart">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <circle cx="9" cy="21" r="1"/>
@@ -224,7 +278,128 @@
       </div>
       <p class="form-error hidden" id="loginError">Please enter a valid 10-digit mobile number.</p>
       <button class="btn-primary btn-full" type="submit">Continue</button>
+      <p class="modal-footer-link">
+        Prefer password or full sign-in? <a href="login.html">Go to Login Page &rarr;</a>
+      </p>
     </form>
+  </dialog>
+
+  <!-- Delivery Location Modal -->
+  <div class="modal-overlay hidden" id="locationOverlay" aria-hidden="true"></div>
+  <dialog class="location-modal" id="locationModal" aria-labelledby="locationModalTitle">
+    <div class="location-modal-header">
+      <div>
+        <h2 id="locationModalTitle">Choose Delivery Location</h2>
+        <p class="modal-subtitle">Select an address or add a desired location of your choice</p>
+      </div>
+      <button class="modal-close" id="locationClose" type="button" aria-label="Close location selector">&times;</button>
+    </div>
+
+    <div class="location-modal-body">
+      <!-- GPS Auto-Detect Button -->
+      <button class="btn-detect-location" id="detectLocationBtn" type="button">
+        <div class="detect-icon-wrapper">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+          </svg>
+        </div>
+        <div class="detect-text">
+          <strong id="detectTitle">Detect My Current Location</strong>
+          <small id="detectStatus">Using GPS & browser location</small>
+        </div>
+      </button>
+
+      <!-- Saved Addresses Section -->
+      <div class="locations-section-title-wrap">
+        <h3>Saved Addresses</h3>
+        <button class="btn-text-link" id="toggleAddLocationBtn" type="button">+ Add New Address</button>
+      </div>
+
+      <div class="saved-locations-list" id="savedLocationsList">
+        <!-- Rendered dynamically from JavaScript -->
+      </div>
+
+      <!-- Add New Location Form -->
+      <form class="add-location-form hidden" id="addLocationForm" novalidate>
+        <div class="form-header-inline">
+          <h4>Add New Delivery Location</h4>
+          <button class="btn-close-subform" id="closeAddLocationForm" type="button" aria-label="Close form">&times;</button>
+        </div>
+
+        <div class="form-group">
+          <label>Save address as</label>
+          <div class="location-tag-pills">
+            <label class="tag-pill">
+              <input type="radio" name="addressTag" value="Home" checked>
+              <span class="pill-content">🏠 Home</span>
+            </label>
+            <label class="tag-pill">
+              <input type="radio" name="addressTag" value="Work">
+              <span class="pill-content">🏢 Work</span>
+            </label>
+            <label class="tag-pill">
+              <input type="radio" name="addressTag" value="Other">
+              <span class="pill-content">📍 Other</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="addressHouse">Flat / House / Floor / Building Name</label>
+          <input
+            type="text"
+            id="addressHouse"
+            class="form-input"
+            placeholder="e.g. Flat 402, Building 3A, Sunshine Heights"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="addressArea">Area / Street / Sector / Landmark</label>
+          <input
+            type="text"
+            id="addressArea"
+            class="form-input"
+            placeholder="e.g. Bandra West, Near Linking Road"
+            required
+          >
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="addressCity">City</label>
+            <input
+              type="text"
+              id="addressCity"
+              class="form-input"
+              placeholder="e.g. Mumbai"
+              value="Mumbai"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="addressPincode">6-digit Pincode</label>
+            <input
+              type="text"
+              id="addressPincode"
+              class="form-input"
+              placeholder="e.g. 400050"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              required
+            >
+          </div>
+        </div>
+
+        <p class="form-error hidden" id="addressError">Please fill out house, area, city, and a valid 6-digit pincode.</p>
+
+        <div class="form-actions-row">
+          <button class="btn-cancel" id="cancelAddLocationBtn" type="button">Cancel</button>
+          <button class="btn-primary" type="submit">Save & Deliver Here</button>
+        </div>
+      </form>
+    </div>
   </dialog>
 
   <!-- Mobile Menu Toggle (optional compact nav) -->

@@ -1,5 +1,64 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#f1c40f" rx="16"/>
-  <rect x="20" y="20" width="260" height="200" fill="rgba(255,255,255,0.25)" rx="12"/>
-  <text x="150" y="260" font-family="Arial,sans-serif" font-size="18" fill="#333" text-anchor="middle" font-weight="600">Maaza</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="mzBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="mzJuice" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="40%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="mzBottle" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="25%" stop-color="#fed7aa"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="mzMango" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#facc15"/>
+      <stop offset="60%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <filter id="mzShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#78350f" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <rect width="300" height="300" rx="16" fill="url(#mzBg)"/>
+
+  <g filter="url(#mzShadow)">
+    <!-- Bottle Silhouette -->
+    <!-- Cap -->
+    <rect x="134" y="38" width="32" height="18" rx="3" fill="#eab308" stroke="#ca8a04" stroke-width="1.5"/>
+    <line x1="139" y1="42" x2="139" y2="52" stroke="#a16207" stroke-width="1"/>
+    <line x1="145" y1="42" x2="145" y2="52" stroke="#a16207" stroke-width="1"/>
+    <line x1="150" y1="42" x2="150" y2="52" stroke="#a16207" stroke-width="1"/>
+    <line x1="155" y1="42" x2="155" y2="52" stroke="#a16207" stroke-width="1"/>
+    <line x1="161" y1="42" x2="161" y2="52" stroke="#a16207" stroke-width="1"/>
+    <rect x="131" y="56" width="38" height="6" rx="2" fill="#ca8a04"/>
+
+    <!-- Neck -->
+    <path d="M 136 62 L 134 95 Q 112 115 110 145 L 110 248 Q 110 256 120 258 L 180 258 Q 190 256 190 248 L 190 145 Q 188 115 166 95 L 164 62 Z" fill="url(#mzBottle)" stroke="#b45309" stroke-width="1.5"/>
+
+    <!-- Label -->
+    <path d="M 110 135 L 190 135 L 190 215 L 110 215 Z" fill="#e11d48"/>
+    <path d="M 110 132 Q 150 142 190 132 L 190 140 Q 150 150 110 140 Z" fill="#fde047"/>
+    <path d="M 110 210 Q 150 220 190 210 L 190 218 Q 150 228 110 218 Z" fill="#fde047"/>
+
+    <!-- Brand Text -->
+    <text x="150" y="168" font-family="'Impact','Arial Black',sans-serif" font-size="22" font-style="italic" fill="#ffffff" text-anchor="middle" letter-spacing="1">maaza</text>
+    <text x="150" y="182" font-family="'Segoe UI',sans-serif" font-size="9" font-weight="800" fill="#fef08a" text-anchor="middle" letter-spacing="0.5">MANGO DRINK</text>
+
+    <!-- Alphonso Mango Graphic -->
+    <!-- Mango Fruit Shape -->
+    <path d="M 148 200 C 138 194 132 202 135 212 C 137 218 145 224 153 222 C 162 220 166 210 162 204 C 158 198 152 196 148 200 Z" fill="url(#mzMango)"/>
+    <!-- Mango Leaf -->
+    <path d="M 146 198 Q 140 190 136 191 Q 138 197 146 198 Z" fill="#15803d"/>
+    <line x1="145" y1="198" x2="138" y2="192" stroke="#86efac" stroke-width="0.8"/>
+
+    <!-- Juice Volume Badge -->
+    <rect x="135" y="234" width="30" height="12" rx="3" fill="rgba(0,0,0,0.25)"/>
+    <text x="150" y="243" font-family="'Segoe UI',sans-serif" font-size="8" font-weight="700" fill="#ffffff" text-anchor="middle">1.2 L</text>
+  </g>
 </svg>

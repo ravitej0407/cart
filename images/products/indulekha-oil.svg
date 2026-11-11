@@ -1,5 +1,72 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#8e44ad" rx="16"/>
-  <rect x="20" y="20" width="260" height="200" fill="rgba(255,255,255,0.25)" rx="12"/>
-  <text x="150" y="260" font-family="Arial,sans-serif" font-size="18" fill="#333" text-anchor="middle" font-weight="600">Indulekha Oil</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="indBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7fee7"/>
+      <stop offset="100%" stop-color="#ecfccb"/>
+    </linearGradient>
+    <linearGradient id="indBottle" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3f2e1a"/>
+      <stop offset="30%" stop-color="#5c4028"/>
+      <stop offset="70%" stop-color="#4a331c"/>
+      <stop offset="100%" stop-color="#2c1e10"/>
+    </linearGradient>
+    <linearGradient id="indGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ca8a04"/>
+      <stop offset="50%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <filter id="indShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#365314" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="300" height="300" rx="16" fill="url(#indBg)"/>
+
+  <g filter="url(#indShadow)">
+    <!-- Iconic Indulekha "Selfie Comb" Applicator (White/Cream Comb Prongs) -->
+    <g transform="translate(150, 32)">
+      <!-- Prongs -->
+      <line x1="-16" y1="0" x2="-16" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="-10" y1="0" x2="-10" y2="20" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="-4" y1="0" x2="-4" y2="21" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="2" y1="0" x2="2" y2="21" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="8" y1="0" x2="8" y2="20" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="14" y1="0" x2="14" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Comb Base Cap -->
+      <path d="M -22 18 L 22 18 L 18 32 L -18 32 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="-14" y="32" width="28" height="6" fill="#cbd5e1"/>
+    </g>
+
+    <!-- Amber Bottle Body -->
+    <path d="M 136 70 L 132 95 Q 110 114 108 140 L 108 240 Q 108 254 122 256 L 178 256 Q 192 254 192 240 L 192 140 Q 190 114 168 95 L 164 70 Z" fill="url(#indBottle)" stroke="#1c120c" stroke-width="1.5"/>
+
+    <!-- Gold Accent Line -->
+    <rect x="108" y="112" width="84" height="2" fill="url(#indGold)"/>
+    
+    <!-- Label Background (Cream) -->
+    <rect x="114" y="120" width="72" height="96" rx="4" fill="#fffbeb" stroke="#fef08a" stroke-width="1"/>
+
+    <!-- Ayurvedic Brand Header -->
+    <text x="150" y="136" font-family="'Segoe UI',serif" font-size="7" font-weight="800" fill="#65a30d" text-anchor="middle" letter-spacing="1">AYURVEDIC MEDICINE</text>
+    
+    <!-- Indulekha Brand Name -->
+    <text x="150" y="152" font-family="'Times New Roman',serif" font-size="14" font-weight="900" fill="#14532d" text-anchor="middle" letter-spacing="0.5">indulekha</text>
+
+    <!-- Bringha Subtext -->
+    <text x="150" y="164" font-family="'Segoe UI',sans-serif" font-size="8.5" font-weight="800" fill="#b45309" text-anchor="middle">BRINGHA OIL</text>
+
+    <!-- Bhringraj Herbal Leaf Icon -->
+    <g transform="translate(150, 182)">
+      <circle cx="0" cy="0" r="10" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+      <path d="M 0 -7 Q -6 0 0 7 Q 6 0 0 -7 Z" fill="#15803d"/>
+      <line x1="0" y1="-5" x2="0" y2="5" stroke="#bbf7d0" stroke-width="0.8"/>
+    </g>
+
+    <text x="150" y="206" font-family="'Segoe UI',sans-serif" font-size="6.5" font-weight="700" fill="#166534" text-anchor="middle">HAIR FALL CONTROL</text>
+
+    <!-- Gold Accent Line -->
+    <rect x="108" y="222" width="84" height="2" fill="url(#indGold)"/>
+
+    <text x="150" y="244" font-family="'Segoe UI',sans-serif" font-size="10" font-weight="800" fill="#ffffff" text-anchor="middle">100 ml</text>
+  </g>
 </svg>

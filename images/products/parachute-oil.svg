@@ -1,5 +1,67 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-  <rect width="300" height="300" fill="#1e8449" rx="16"/>
-  <rect x="20" y="20" width="260" height="200" fill="rgba(255,255,255,0.25)" rx="12"/>
-  <text x="150" y="260" font-family="Arial,sans-serif" font-size="18" fill="#333" text-anchor="middle" font-weight="600">Parachute Oil</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="pcoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f9ff"/>
+      <stop offset="100%" stop-color="#e0f2fe"/>
+    </linearGradient>
+    <linearGradient id="pcoBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="35%" stop-color="#0369a1"/>
+      <stop offset="70%" stop-color="#075985"/>
+      <stop offset="100%" stop-color="#0c4a6e"/>
+    </linearGradient>
+    <linearGradient id="pcoCoconut" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <filter id="pcoShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0c4a6e" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <rect width="300" height="300" rx="16" fill="url(#pcoBg)"/>
+
+  <g filter="url(#pcoShadow)">
+    <!-- Blue Container / 1L Bottle -->
+    <!-- Cap -->
+    <rect x="132" y="40" width="36" height="18" rx="4" fill="#0369a1" stroke="#075985" stroke-width="1.5"/>
+    <rect x="128" y="58" width="44" height="6" rx="2" fill="#0284c7"/>
+
+    <!-- Bottle Body (Wider 1L Shape) -->
+    <path d="M 132 64 L 126 92 Q 98 112 96 140 L 96 238 Q 96 254 112 256 L 188 256 Q 204 254 204 238 L 204 140 Q 202 112 174 92 L 168 64 Z" fill="url(#pcoBlue)" stroke="#0c4a6e" stroke-width="1.5"/>
+
+    <!-- Green Palm Tree Emblem -->
+    <g transform="translate(150, 118)">
+      <path d="M -2 16 Q 0 4 2 -4 L 4 -4 Q 2 4 1 16 Z" fill="#78350f"/>
+      <path d="M 0 -4 Q -14 -12 -20 -6 Q -12 2 0 -4 Z" fill="#22c55e"/>
+      <path d="M 0 -4 Q -16 -2 -18 8 Q -10 6 0 -4 Z" fill="#16a34a"/>
+      <path d="M 0 -4 Q 14 -12 20 -6 Q 12 2 0 -4 Z" fill="#22c55e"/>
+      <path d="M 0 -4 Q 16 -2 18 8 Q 10 6 0 -4 Z" fill="#16a34a"/>
+      <path d="M 0 -4 Q 0 -18 6 -18 Q 4 -8 0 -4 Z" fill="#4ade80"/>
+      <circle cx="-2" cy="0" r="2.5" fill="#451a03"/>
+      <circle cx="3" cy="1" r="2.5" fill="#451a03"/>
+    </g>
+
+    <!-- Brand Name -->
+    <text x="150" y="156" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">Parachute</text>
+
+    <!-- 100% Pure Coconut Oil Badge -->
+    <rect x="110" y="164" width="80" height="15" rx="7.5" fill="#ffffff"/>
+    <text x="150" y="175" font-family="'Segoe UI',sans-serif" font-size="9" font-weight="800" fill="#0369a1" text-anchor="middle">100% PURE</text>
+
+    <!-- Half Coconut Graphic -->
+    <g transform="translate(150, 204)">
+      <!-- Outer Shell -->
+      <circle cx="0" cy="0" r="18" fill="url(#pcoCoconut)"/>
+      <!-- Inner White Kernel -->
+      <circle cx="0" cy="0" r="14" fill="#ffffff"/>
+      <!-- Oil Center -->
+      <circle cx="0" cy="0" r="10" fill="#e0f2fe"/>
+      <!-- Oil drop -->
+      <path d="M 0 -6 C -3 0 -5 3 -5 6 C -5 9 -2 11 0 11 C 2 11 5 9 5 6 C 5 3 3 0 0 -6 Z" fill="#38bdf8"/>
+    </g>
+
+    <text x="150" y="234" font-family="'Segoe UI',sans-serif" font-size="9" font-weight="700" fill="#bae6fd" text-anchor="middle">EDIBLE COCONUT OIL</text>
+    <text x="150" y="247" font-family="'Segoe UI',sans-serif" font-size="11" font-weight="800" fill="#ffffff" text-anchor="middle">1 LITRE</text>
+  </g>
 </svg>
