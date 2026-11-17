@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="QuickMart - Groceries delivered to your doorstep in minutes">
-  <title>QuickMart | Groceries Delivered Fast</title>
+  <meta name="description" content="QuickMart - Groceries and daily essentials delivered to your doorstep in 10 minutes">
+  <title>QuickMart | 10-Minute Grocery Delivery</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     (function() {
       const savedTheme = localStorage.getItem('quickmart_theme');
@@ -25,7 +25,7 @@
   <header class="header" id="header">
     <div class="header-top">
       <div class="container header-inner">
-        <a href="#" class="logo" aria-label="QuickMart Home">
+        <a href="index.html" class="logo" aria-label="QuickMart Home">
           <img src="images/logo.png" alt="QuickMart logo" class="logo-img">
           <span class="logo-text">QuickMart</span>
         </a>
@@ -53,6 +53,13 @@
         </p>
 
         <div class="header-actions">
+          <!-- Active Order Tracker Pill (shown when order in transit) -->
+          <button class="btn-active-order hidden" id="activeOrderBtn" type="button" aria-label="Track active delivery order">
+            <span class="pulse-indicator"></span>
+            <span class="active-order-label">Tracking</span>
+            <span class="active-order-timer" id="headerOrderTimer">10:00</span>
+          </button>
+
           <!-- Dark Mode Toggle Button -->
           <button class="btn-theme" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Toggle theme">
             <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -62,6 +69,24 @@
               <circle cx="12" cy="12" r="5"/>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
             </svg>
+          </button>
+
+          <!-- Orders Button -->
+          <button class="btn-header-link" id="ordersBtn" type="button" aria-label="View past orders" title="My Orders">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span class="header-link-text">Orders</span>
+          </button>
+
+          <!-- Wishlist Button -->
+          <button class="btn-wishlist" id="wishlistBtn" type="button" aria-label="View wishlist" title="My Wishlist">
+            <svg class="icon icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span class="wishlist-count" id="wishlistCount">0</span>
           </button>
 
           <!-- User Profile Menu (shown when logged in) -->
@@ -79,6 +104,20 @@
                 <small id="dropdownUserPhone">+91 00000 00000</small>
               </div>
               <hr class="dropdown-divider">
+              <button class="dropdown-item" id="dropdownOrdersBtn" type="button">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                My Orders
+              </button>
+              <button class="dropdown-item" id="dropdownWishlistBtn" type="button">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                My Wishlist
+              </button>
               <a href="login.html" class="dropdown-item">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -111,6 +150,7 @@
       </div>
     </div>
 
+    <!-- Header Search & Popular Keyword Chips -->
     <div class="header-search">
       <div class="container">
         <div class="search-wrapper">
@@ -122,11 +162,21 @@
             type="search"
             id="searchInput"
             class="search-input"
-            placeholder='Search for "milk", "bread", "fruits"...'
+            placeholder='Search for "milk", "fruits", "rice", "shampoo"...'
             autocomplete="off"
             aria-label="Search products"
           >
           <button class="search-clear hidden" id="searchClear" type="button" aria-label="Clear search">&times;</button>
+        </div>
+
+        <div class="quick-search-tags" id="quickSearchTags">
+          <span class="tags-label">Quick search:</span>
+          <button type="button" class="tag-pill-btn" data-query="Milk">🥛 Milk</button>
+          <button type="button" class="tag-pill-btn" data-query="Mango">🥭 Mango</button>
+          <button type="button" class="tag-pill-btn" data-query="Rice">🍚 Rice</button>
+          <button type="button" class="tag-pill-btn" data-query="Chocolates">🍫 Chocolates</button>
+          <button type="button" class="tag-pill-btn" data-query="Oil">🫒 Oil</button>
+          <button type="button" class="tag-pill-btn" data-query="Shampoo">🧴 Shampoo</button>
         </div>
       </div>
     </div>
@@ -144,10 +194,13 @@
     <section class="hero" id="hero">
       <div class="container hero-inner">
         <div class="hero-content">
-          <span class="hero-tag">India's fastest grocery delivery</span>
-          <h1>Groceries delivered to your doorstep</h1>
-          <p>Fresh products. Great prices. Fast delivery.</p>
-          <button class="btn-primary" id="shopNowBtn" type="button">Shop Now</button>
+          <span class="hero-tag">⚡ India's fastest grocery delivery</span>
+          <h1>Groceries delivered in 10 minutes</h1>
+          <p>Superfast delivery of fresh fruits, veggies, dairy, snacks & household essentials at unbeatable prices.</p>
+          <div class="hero-cta-group">
+            <button class="btn-primary" id="shopNowBtn" type="button">Shop Now &rarr;</button>
+            <button class="btn-secondary-link" id="heroOffersBtn" type="button">View Offers 🏷️</button>
+          </div>
         </div>
         <div class="hero-image">
           <img src="images/banner.jpg" alt="Fresh groceries delivery banner with fruits and vegetables">
@@ -158,23 +211,54 @@
     <!-- Offers Section -->
     <section class="offers" id="offers">
       <div class="container">
-        <h2 class="section-title">Offers for you</h2>
+        <h2 class="section-title">Offers & Coupons for you</h2>
         <div class="offers-grid">
-          <article class="offer-card offer-card--purple">
+          <article class="offer-card offer-card--purple" data-copy-coupon="FIRST20">
             <span class="offer-badge">20% OFF</span>
             <h3>On your first order</h3>
             <p>Use code <strong>FIRST20</strong> at checkout</p>
+            <span class="offer-cta">Click to copy code &rarr;</span>
           </article>
-          <article class="offer-card offer-card--pink">
+          <article class="offer-card offer-card--pink" data-copy-coupon="FREEDEL">
             <span class="offer-badge">FREE DELIVERY</span>
             <h3>On orders above ₹299</h3>
-            <p>No delivery fee on qualifying orders</p>
+            <p>Or use promo code <strong>FREEDEL</strong></p>
+            <span class="offer-cta">Click to copy code &rarr;</span>
           </article>
-          <article class="offer-card offer-card--gradient">
-            <span class="offer-badge">SPECIAL OFFER</span>
-            <h3>Save more on groceries</h3>
-            <p>Up to 40% off on daily essentials</p>
+          <article class="offer-card offer-card--gradient" data-copy-coupon="QUICK50">
+            <span class="offer-badge">FLAT ₹50 OFF</span>
+            <h3>On orders above ₹399</h3>
+            <p>Apply code <strong>QUICK50</strong></p>
+            <span class="offer-cta">Click to copy code &rarr;</span>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Sort Toolbar -->
+    <section class="filter-toolbar-section" id="filterToolbarSection">
+      <div class="container">
+        <div class="filter-toolbar" id="filterToolbar">
+          <div class="filter-chips" id="filterChips">
+            <button class="filter-chip active" data-filter="all" type="button">All Items</button>
+            <button class="filter-chip" data-filter="under-100" type="button">Under ₹100</button>
+            <button class="filter-chip" data-filter="deals" type="button">🏷️ Deals (20%+ OFF)</button>
+            <button class="filter-chip" data-filter="wishlist" type="button">❤️ Wishlist (<span id="filterWishlistCount">0</span>)</button>
+          </div>
+
+          <div class="filter-sort-wrap">
+            <span class="product-count-badge" id="productCountBadge">43 items</span>
+            <div class="sort-select-wrapper">
+              <label for="sortSelect" class="sr-only">Sort products</label>
+              <select id="sortSelect" class="sort-select" aria-label="Sort products">
+                <option value="featured">⚡ Recommended</option>
+                <option value="price-low">💵 Price: Low to High</option>
+                <option value="price-high">💎 Price: High to Low</option>
+                <option value="discount">🏷️ Highest Discount</option>
+                <option value="name">🔤 Name: A to Z</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -183,7 +267,7 @@
     <section class="search-results container hidden" id="searchResultsSection">
       <h2 class="section-title" id="searchResultsTitle">Search Results</h2>
       <div class="products-grid" id="searchResultsGrid"></div>
-      <p class="no-products hidden" id="noProductsMsg">No products found. Try a different search term.</p>
+      <p class="no-products hidden" id="noProductsMsg">No products found. Try a different search term or clear filters.</p>
     </section>
 
     <!-- Product Sections (dynamically rendered) -->
@@ -194,35 +278,40 @@
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-col">
-        <h3>Company</h3>
+        <h3>QuickMart</h3>
+        <p class="footer-desc">India's favourite 10-minute grocery delivery app. Everyday essentials delivered fresh at the lowest prices.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Categories</h3>
         <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a href="#categoryNav" onclick="selectCategory('Fresh')">Fresh Fruits & Veggies</a></li>
+          <li><a href="#categoryNav" onclick="selectCategory('Dairy')">Dairy & Milk</a></li>
+          <li><a href="#categoryNav" onclick="selectCategory('Atta, Rice & Dal')">Atta, Rice & Dal</a></li>
+          <li><a href="#categoryNav" onclick="selectCategory('Snacks & Biscuits')">Snacks & Chocolates</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Help</h3>
+        <h3>Help & Orders</h3>
         <ul>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">Delivery Information</a></li>
-          <li><a href="#">Payment Options</a></li>
-          <li><a href="#">Customer Support</a></li>
+          <li><a href="#" id="footerOrdersLink">My Past Orders</a></li>
+          <li><a href="#" id="footerWishlistLink">My Wishlist</a></li>
+          <li><a href="#" id="footerLocationLink">Delivery Locations</a></li>
+          <li><a href="#">Customer Support (24x7)</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Social Media</h3>
+        <h3>Follow Us</h3>
         <ul class="social-links">
           <li><a href="#" aria-label="Instagram">Instagram</a></li>
           <li><a href="#" aria-label="Facebook">Facebook</a></li>
-          <li><a href="#" aria-label="X">X</a></li>
+          <li><a href="#" aria-label="X">X (Twitter)</a></li>
           <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p>&copy; 2026 Grocery Clone. All rights reserved.</p>
+        <p>&copy; 2026 QuickMart Groceries. 10-minute lightning delivery. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -231,31 +320,404 @@
   <aside class="cart-overlay hidden" id="cartOverlay" aria-hidden="true"></aside>
   <aside class="cart-sidebar" id="cartSidebar" aria-label="Shopping cart" aria-hidden="true">
     <div class="cart-header">
-      <h2>Your Cart</h2>
+      <div class="cart-header-title">
+        <h2>Your Cart</h2>
+        <span class="cart-items-total-pill" id="cartHeaderItemsCount">0 items</span>
+      </div>
       <button class="cart-close" id="cartClose" type="button" aria-label="Close cart">&times;</button>
     </div>
+
+    <!-- Free Delivery Progress Tracker -->
+    <div class="free-delivery-tracker" id="freeDeliveryTracker">
+      <div class="free-delivery-info">
+        <span id="freeDeliveryMsg">Add ₹299 more for FREE delivery</span>
+        <span class="free-delivery-icon">🚚</span>
+      </div>
+      <div class="delivery-progress-bar">
+        <div class="delivery-progress-fill" id="deliveryProgressFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
     <div class="cart-body" id="cartBody">
       <p class="cart-empty" id="cartEmpty">Your cart is empty. Add some groceries!</p>
       <ul class="cart-items" id="cartItems"></ul>
     </div>
+
+    <!-- Coupons Strip in Cart -->
+    <div class="cart-coupons" id="cartCoupons">
+      <div class="coupon-input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+        <input type="text" id="couponInput" placeholder="Enter coupon code" maxlength="12" style="text-transform: uppercase;">
+        <button class="btn-apply-coupon" id="applyCouponBtn" type="button">Apply</button>
+      </div>
+
+      <div class="applied-coupon-badge hidden" id="appliedCouponBadge">
+        <span>🎉 <strong id="appliedCouponCode">FIRST20</strong> applied! (<span id="appliedCouponDiscountText">20% OFF</span>)</span>
+        <button class="btn-remove-coupon" id="removeCouponBtn" type="button" aria-label="Remove coupon" title="Remove coupon">&times;</button>
+      </div>
+
+      <div class="quick-coupon-pills">
+        <button class="coupon-pill" data-code="FIRST20" type="button">🏷️ FIRST20 (20% OFF)</button>
+        <button class="coupon-pill" data-code="QUICK50" type="button">🏷️ QUICK50 (₹50 OFF)</button>
+        <button class="coupon-pill" data-code="FREEDEL" type="button">🏷️ FREEDEL (Free Del)</button>
+      </div>
+    </div>
+
     <div class="cart-footer" id="cartFooter">
       <div class="cart-summary">
         <div class="summary-row">
           <span>Subtotal</span>
           <span id="cartSubtotal">₹0</span>
         </div>
+        <div class="summary-row discount-row hidden" id="cartDiscountRow">
+          <span>Coupon Discount</span>
+          <span class="text-success" id="cartDiscount">-₹0</span>
+        </div>
         <div class="summary-row">
-          <span>Delivery</span>
+          <span>Delivery Fee</span>
           <span id="cartDelivery">₹20</span>
         </div>
         <div class="summary-row summary-total">
-          <span>Total</span>
+          <span>Total to Pay</span>
           <span id="cartTotal">₹0</span>
         </div>
+        <div class="cart-savings-banner hidden" id="cartSavingsBanner">
+          <span>🎉 You are saving <strong id="cartSavingsAmount">₹0</strong> on this order!</span>
+        </div>
       </div>
-      <button class="btn-checkout" id="checkoutBtn" type="button">Proceed to Checkout</button>
+      <button class="btn-checkout" id="checkoutBtn" type="button">Proceed to Checkout &rarr;</button>
     </div>
   </aside>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay hidden" id="checkoutOverlay" aria-hidden="true"></div>
+  <dialog class="checkout-modal" id="checkoutModal" aria-labelledby="checkoutTitle">
+    <div class="checkout-modal-header">
+      <div>
+        <h2 id="checkoutTitle">Checkout & Review</h2>
+        <p class="modal-subtitle">Lightning-fast 10-minute delivery to your doorstep</p>
+      </div>
+      <button class="modal-close" id="checkoutClose" type="button" aria-label="Close checkout">&times;</button>
+    </div>
+
+    <div class="checkout-modal-body">
+      <!-- Address Summary Card -->
+      <div class="checkout-section-card">
+        <div class="section-card-header">
+          <div class="section-header-left">
+            <span class="section-icon">📍</span>
+            <div>
+              <h3>Delivery Address</h3>
+              <p class="section-subtext" id="checkoutAddressText">Home - Bandra West, Mumbai</p>
+            </div>
+          </div>
+          <button class="btn-text-link" id="checkoutChangeAddressBtn" type="button">Change</button>
+        </div>
+      </div>
+
+      <!-- Delivery Instructions -->
+      <div class="checkout-section-card">
+        <div class="section-card-header">
+          <div class="section-header-left">
+            <span class="section-icon">📝</span>
+            <div>
+              <h3>Delivery Instructions</h3>
+              <p class="section-subtext">Optional rider instructions for safe drop-off</p>
+            </div>
+          </div>
+        </div>
+        <div class="instruction-pills" id="instructionPills">
+          <button class="instruction-pill" data-instruction="Leave at door" type="button">🚪 Leave at door</button>
+          <button class="instruction-pill" data-instruction="Don't ring bell" type="button">🔕 Don't ring bell</button>
+          <button class="instruction-pill" data-instruction="Avoid calling" type="button">📵 Avoid calling</button>
+          <button class="instruction-pill" data-instruction="Hand to guard" type="button">👮 Hand to guard</button>
+        </div>
+      </div>
+
+      <!-- Delivery Partner Tip -->
+      <div class="checkout-section-card">
+        <div class="section-card-header">
+          <div class="section-header-left">
+            <span class="section-icon">❤️</span>
+            <div>
+              <h3>Tip Your Delivery Partner</h3>
+              <p class="section-subtext">100% of the tip goes directly to your rider</p>
+            </div>
+          </div>
+        </div>
+        <div class="tip-options" id="tipOptions">
+          <button class="tip-btn active" data-tip="0" type="button">None</button>
+          <button class="tip-btn" data-tip="10" type="button">₹10</button>
+          <button class="tip-btn" data-tip="20" type="button">₹20</button>
+          <button class="tip-btn" data-tip="30" type="button">₹30</button>
+          <button class="tip-btn" data-tip="50" type="button">₹50</button>
+        </div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div class="checkout-section-card">
+        <div class="section-card-header">
+          <div class="section-header-left">
+            <span class="section-icon">💳</span>
+            <div>
+              <h3>Payment Method</h3>
+              <p class="section-subtext">Select your preferred payment method</p>
+            </div>
+          </div>
+        </div>
+        <div class="payment-methods-grid">
+          <label class="payment-method-card active">
+            <input type="radio" name="paymentMethod" value="UPI" checked>
+            <div class="pm-content">
+              <span class="pm-icon">⚡</span>
+              <div>
+                <strong>UPI (GPay / PhonePe / Paytm)</strong>
+                <small>Instant & 100% Secure</small>
+              </div>
+            </div>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="paymentMethod" value="Card">
+            <div class="pm-content">
+              <span class="pm-icon">💳</span>
+              <div>
+                <strong>Credit / Debit Card</strong>
+                <small>Visa, Mastercard, RuPay</small>
+              </div>
+            </div>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="paymentMethod" value="COD">
+            <div class="pm-content">
+              <span class="pm-icon">💵</span>
+              <div>
+                <strong>Cash on Delivery</strong>
+                <small>Pay with cash or UPI at delivery</small>
+              </div>
+            </div>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="paymentMethod" value="Wallet">
+            <div class="pm-content">
+              <span class="pm-icon">👛</span>
+              <div>
+                <strong>QuickMart Wallet</strong>
+                <small>₹500 pre-loaded credit</small>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Bill Details -->
+      <div class="checkout-bill-card">
+        <h3>Bill Breakdown</h3>
+        <div class="bill-row">
+          <span>Items Total (<span id="checkoutItemsCount">0</span> items)</span>
+          <span id="checkoutSubtotal">₹0</span>
+        </div>
+        <div class="bill-row discount-row hidden" id="checkoutDiscountRow">
+          <span>Coupon Discount</span>
+          <span class="text-success" id="checkoutDiscount">-₹0</span>
+        </div>
+        <div class="bill-row">
+          <span>Delivery Partner Fee</span>
+          <span id="checkoutDelivery">₹20</span>
+        </div>
+        <div class="bill-row tip-row hidden" id="checkoutTipRow">
+          <span>Delivery Partner Tip</span>
+          <span id="checkoutTip">₹0</span>
+        </div>
+        <div class="bill-row">
+          <span>Platform Handling Fee</span>
+          <span>₹2</span>
+        </div>
+        <hr class="bill-divider">
+        <div class="bill-row bill-grand-total">
+          <div>
+            <strong>Grand Total</strong>
+            <small class="tax-note">Inclusive of all applicable taxes</small>
+          </div>
+          <strong class="total-price" id="checkoutTotal">₹0</strong>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-full btn-place-order" id="placeOrderBtn" type="button">
+        <span class="btn-text">Pay & Place Order &rarr;</span>
+      </button>
+    </div>
+  </dialog>
+
+  <!-- Live Order Tracking Modal -->
+  <div class="modal-overlay hidden" id="trackingOverlay" aria-hidden="true"></div>
+  <dialog class="tracking-modal" id="trackingModal" aria-labelledby="trackingTitle">
+    <div class="tracking-modal-header">
+      <div>
+        <span class="tracking-badge">⚡ LIVE DELIVERY IN PROGRESS</span>
+        <h2 id="trackingTitle">Arriving in <span id="trackingCountdown">10:00</span> mins</h2>
+        <p class="modal-subtitle">Order #<span id="trackingOrderId">QM-84912</span></p>
+      </div>
+      <button class="modal-close" id="trackingClose" type="button" aria-label="Close tracking">&times;</button>
+    </div>
+
+    <div class="tracking-modal-body">
+      <!-- Simulated Visual Route Map -->
+      <div class="tracking-route-container">
+        <div class="route-map-visual">
+          <div class="route-node node-store">
+            <span class="node-icon">🏪</span>
+            <small>Dark Store</small>
+          </div>
+          <div class="route-line-track">
+            <div class="route-line-fill" id="routeLineFill" style="width: 15%;"></div>
+            <div class="route-scooter" id="routeScooter" style="left: 15%;">
+              🛵
+            </div>
+          </div>
+          <div class="route-node node-home">
+            <span class="node-icon">🏠</span>
+            <small>Your Doorstep</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Order Stepper -->
+      <div class="tracking-stepper">
+        <div class="step-item step-completed" id="step1">
+          <div class="step-indicator">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <strong>Order Placed & Confirmed</strong>
+            <small id="step1Time">Order received at Dark Store</small>
+          </div>
+        </div>
+
+        <div class="step-item step-active" id="step2">
+          <div class="step-indicator">
+            <span class="step-dot"></span>
+          </div>
+          <div class="step-content">
+            <strong>Items Being Packed at Store</strong>
+            <small id="step2Time">100% Quality & freshness check</small>
+          </div>
+        </div>
+
+        <div class="step-item" id="step3">
+          <div class="step-indicator">
+            <span class="step-dot"></span>
+          </div>
+          <div class="step-content">
+            <strong>Rider Out for Delivery</strong>
+            <small id="step3Time">On the way to your address</small>
+          </div>
+        </div>
+
+        <div class="step-item" id="step4">
+          <div class="step-indicator">
+            <span class="step-dot"></span>
+          </div>
+          <div class="step-content">
+            <strong>Delivered</strong>
+            <small id="step4Time">Enjoy your fresh groceries!</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Partner Card -->
+      <div class="rider-card" id="riderCard">
+        <div class="rider-info-left">
+          <div class="rider-avatar">🛵</div>
+          <div>
+            <div class="rider-name-row">
+              <strong id="riderName">Ramesh Kumar</strong>
+              <span class="rider-rating">⭐ 4.9 (1.4k trips)</span>
+            </div>
+            <small class="rider-vehicle" id="riderVehicle">Ather 450X (MH 02 AB 4591)</small>
+          </div>
+        </div>
+        <div class="rider-actions">
+          <button class="btn-rider-action" id="callRiderBtn" type="button" title="Call rider">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Call
+          </button>
+          <button class="btn-rider-action" id="msgRiderBtn" type="button" title="Message rider">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Message
+          </button>
+        </div>
+      </div>
+
+      <!-- Items in Order Dropdown / Summary -->
+      <div class="tracking-order-summary">
+        <div class="tracking-summary-header">
+          <span>Items in this order (<span id="trackingItemsCount">0</span>)</span>
+          <span class="tracking-total-amount" id="trackingTotalAmount">₹0</span>
+        </div>
+        <ul class="tracking-items-list" id="trackingItemsList"></ul>
+      </div>
+
+      <!-- Cancel Order Button -->
+      <div class="tracking-footer-actions">
+        <button class="btn-text-danger" id="cancelOrderBtn" type="button">Cancel Order</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- My Orders Modal -->
+  <div class="modal-overlay hidden" id="ordersOverlay" aria-hidden="true"></div>
+  <dialog class="orders-modal" id="ordersModal" aria-labelledby="ordersModalTitle">
+    <div class="orders-modal-header">
+      <div>
+        <h2 id="ordersModalTitle">My Orders</h2>
+        <p class="modal-subtitle">Your past and active grocery deliveries</p>
+      </div>
+      <button class="modal-close" id="ordersClose" type="button" aria-label="Close orders">&times;</button>
+    </div>
+    <div class="orders-modal-body">
+      <div class="orders-list" id="ordersList">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Wishlist Modal -->
+  <div class="modal-overlay hidden" id="wishlistOverlay" aria-hidden="true"></div>
+  <dialog class="wishlist-modal" id="wishlistModal" aria-labelledby="wishlistModalTitle">
+    <div class="wishlist-modal-header">
+      <div>
+        <h2 id="wishlistModalTitle">My Wishlist ❤️</h2>
+        <p class="modal-subtitle"><span id="wishlistTotalCount">0</span> saved favorite items</p>
+      </div>
+      <button class="modal-close" id="wishlistClose" type="button" aria-label="Close wishlist">&times;</button>
+    </div>
+    <div class="wishlist-modal-body">
+      <div class="wishlist-grid" id="wishlistGrid">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="wishlist-actions-bar hidden" id="wishlistActionsBar">
+        <button class="btn-primary btn-full" id="addAllWishlistToCartBtn" type="button">Add All Wishlist Items to Cart 🛒</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Product Detail Modal (Quick View) -->
+  <div class="modal-overlay hidden" id="productModalOverlay" aria-hidden="true"></div>
+  <dialog class="product-modal" id="productModal" aria-labelledby="modalProductName">
+    <button class="modal-close" id="productModalClose" type="button" aria-label="Close product details">&times;</button>
+    <div class="product-modal-body" id="productModalBody">
+      <!-- Rendered dynamically -->
+    </div>
+  </dialog>
 
   <!-- Login Modal -->
   <div class="modal-overlay hidden" id="loginOverlay" aria-hidden="true"></div>
@@ -401,13 +863,6 @@
       </form>
     </div>
   </dialog>
-
-  <!-- Mobile Menu Toggle (optional compact nav) -->
-  <button class="mobile-menu-btn hidden" id="mobileMenuBtn" type="button" aria-label="Toggle menu">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <path d="M3 12h18M3 6h18M3 18h18"/>
-    </svg>
-  </button>
 
   <script src="script.js"></script>
 </body>
