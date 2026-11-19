@@ -60,6 +60,18 @@
             <span class="active-order-timer" id="headerOrderTimer">10:00</span>
           </button>
 
+          <!-- QuickCash Wallet Button -->
+          <button class="btn-wallet" id="walletBtn" type="button" aria-label="Open QuickCash Wallet" title="QuickCash Wallet">
+            <span class="wallet-coin">🪙</span>
+            <span class="wallet-balance-pill" id="headerWalletBalance">₹150</span>
+          </button>
+
+          <!-- Sound Effects Toggle Button -->
+          <button class="btn-sound" id="soundToggleBtn" type="button" aria-label="Toggle sound effects" title="Sound Effects: ON">
+            <span class="sound-icon-on">🔊</span>
+            <span class="sound-icon-off hidden">🔇</span>
+          </button>
+
           <!-- Dark Mode Toggle Button -->
           <button class="btn-theme" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Toggle theme">
             <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -111,6 +123,10 @@
                   <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
                 My Orders
+              </button>
+              <button class="dropdown-item" id="dropdownWalletBtn" type="button">
+                <span class="dropdown-coin-icon">🪙</span>
+                QuickCash Wallet
               </button>
               <button class="dropdown-item" id="dropdownWishlistBtn" type="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -166,6 +182,14 @@
             autocomplete="off"
             aria-label="Search products"
           >
+          <button class="search-voice" id="voiceSearchBtn" type="button" aria-label="Search with voice" title="Voice Search">
+            <svg class="icon icon-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </button>
           <button class="search-clear hidden" id="searchClear" type="button" aria-label="Clear search">&times;</button>
         </div>
 
@@ -324,7 +348,19 @@
         <h2>Your Cart</h2>
         <span class="cart-items-total-pill" id="cartHeaderItemsCount">0 items</span>
       </div>
-      <button class="cart-close" id="cartClose" type="button" aria-label="Close cart">&times;</button>
+      <div class="cart-header-actions">
+        <button class="btn-share-cart" id="shareCartBtn" type="button" aria-label="Share grocery list" title="Share Grocery List">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          <span class="share-btn-text">Share</span>
+        </button>
+        <button class="cart-close" id="cartClose" type="button" aria-label="Close cart">&times;</button>
+      </div>
     </div>
 
     <!-- Free Delivery Progress Tracker -->
@@ -341,6 +377,17 @@
     <div class="cart-body" id="cartBody">
       <p class="cart-empty" id="cartEmpty">Your cart is empty. Add some groceries!</p>
       <ul class="cart-items" id="cartItems"></ul>
+    </div>
+
+    <!-- Frequently Added Essentials (Smart Upsells) -->
+    <div class="cart-upsell-section hidden" id="cartUpsellSection">
+      <div class="upsell-title-row">
+        <span class="upsell-icon">✨</span>
+        <strong class="upsell-heading">Don't Forget These Essentials</strong>
+      </div>
+      <div class="upsell-items-scroll" id="cartUpsellItems">
+        <!-- Rendered dynamically -->
+      </div>
     </div>
 
     <!-- Coupons Strip in Cart -->
@@ -404,6 +451,52 @@
     </div>
 
     <div class="checkout-modal-body">
+      <!-- Delivery Mode & Timing -->
+      <div class="checkout-section-card">
+        <div class="section-card-header">
+          <div class="section-header-left">
+            <span class="section-icon">⏱️</span>
+            <div>
+              <h3>Delivery Mode</h3>
+              <p class="section-subtext">Choose 10-minute lightning express or scheduled delivery</p>
+            </div>
+          </div>
+        </div>
+        <div class="delivery-mode-options">
+          <label class="delivery-mode-card active" id="modeInstantLabel">
+            <input type="radio" name="deliveryMode" value="instant" checked>
+            <div class="dm-content">
+              <strong>⚡ Instant Delivery</strong>
+              <small>Guaranteed in 10 minutes</small>
+            </div>
+          </label>
+          <label class="delivery-mode-card" id="modeScheduledLabel">
+            <input type="radio" name="deliveryMode" value="scheduled">
+            <div class="dm-content">
+              <strong>📅 Schedule for Later</strong>
+              <small>Choose a convenient time slot</small>
+            </div>
+          </label>
+        </div>
+        <div class="delivery-slots-container hidden" id="deliverySlotsContainer">
+          <p class="slots-heading">Select Delivery Time Slot:</p>
+          <div class="slot-pills-grid" id="slotPillsGrid">
+            <label class="slot-pill active">
+              <input type="radio" name="deliverySlot" value="Tomorrow, 7:00 AM - 8:00 AM" checked>
+              <span>🌅 Tomorrow, 7:00 AM - 8:00 AM</span>
+            </label>
+            <label class="slot-pill">
+              <input type="radio" name="deliverySlot" value="Today, 1:00 PM - 2:00 PM">
+              <span>☀️ Today, 1:00 PM - 2:00 PM</span>
+            </label>
+            <label class="slot-pill">
+              <input type="radio" name="deliverySlot" value="Today, 7:00 PM - 8:00 PM">
+              <span>🌆 Today, 7:00 PM - 8:00 PM</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
       <!-- Address Summary Card -->
       <div class="checkout-section-card">
         <div class="section-card-header">
@@ -499,13 +592,13 @@
               </div>
             </div>
           </label>
-          <label class="payment-method-card">
+          <label class="payment-method-card" id="paymentWalletCard">
             <input type="radio" name="paymentMethod" value="Wallet">
             <div class="pm-content">
-              <span class="pm-icon">👛</span>
+              <span class="pm-icon">🪙</span>
               <div>
-                <strong>QuickMart Wallet</strong>
-                <small>₹500 pre-loaded credit</small>
+                <strong>QuickCash Wallet</strong>
+                <small id="checkoutWalletBalanceLabel">Balance: ₹150.00 (5% Cashback on this order!)</small>
               </div>
             </div>
           </label>
@@ -535,6 +628,10 @@
           <span>Platform Handling Fee</span>
           <span>₹2</span>
         </div>
+        <div class="bill-row cashback-row" id="checkoutCashbackRow">
+          <span>🎉 QuickCash 5% Cashback</span>
+          <span class="text-success" id="checkoutCashbackAmount">+₹0</span>
+        </div>
         <hr class="bill-divider">
         <div class="bill-row bill-grand-total">
           <div>
@@ -560,7 +657,10 @@
         <h2 id="trackingTitle">Arriving in <span id="trackingCountdown">10:00</span> mins</h2>
         <p class="modal-subtitle">Order #<span id="trackingOrderId">QM-84912</span></p>
       </div>
-      <button class="modal-close" id="trackingClose" type="button" aria-label="Close tracking">&times;</button>
+      <div class="tracking-header-actions">
+        <button class="btn-tracking-invoice" id="trackingInvoiceBtn" type="button" title="View Tax Invoice">📄 Invoice</button>
+        <button class="modal-close" id="trackingClose" type="button" aria-label="Close tracking">&times;</button>
+      </div>
     </div>
 
     <div class="tracking-modal-body">
@@ -861,6 +961,125 @@
           <button class="btn-primary" type="submit">Save & Deliver Here</button>
         </div>
       </form>
+    </div>
+  </dialog>
+
+  <!-- QuickCash Wallet Modal -->
+  <div class="modal-overlay hidden" id="walletOverlay" aria-hidden="true"></div>
+  <dialog class="wallet-modal" id="walletModal" aria-labelledby="walletModalTitle">
+    <div class="wallet-modal-header">
+      <div class="wallet-header-title">
+        <span class="wallet-icon-badge">🪙</span>
+        <div>
+          <h2 id="walletModalTitle">QuickCash Wallet</h2>
+          <p class="modal-subtitle">Instant 1-click checkout & 5% cashback rewards</p>
+        </div>
+      </div>
+      <button class="modal-close" id="walletClose" type="button" aria-label="Close wallet">&times;</button>
+    </div>
+
+    <div class="wallet-modal-body">
+      <!-- Balance Card -->
+      <div class="wallet-balance-card">
+        <div class="balance-meta">
+          <small>CURRENT AVAILABLE BALANCE</small>
+          <div class="balance-display" id="modalWalletBalance">₹150.00</div>
+        </div>
+        <div class="cashback-badge-strip">
+          <span class="badge-sparkle">⚡</span>
+          <span>Earn 5% Instant Cashback auto-credited on every order</span>
+        </div>
+      </div>
+
+      <!-- Add Money / Top-Up -->
+      <div class="wallet-topup-section">
+        <h3>Top Up QuickCash</h3>
+        <p class="section-subtext">Add funds instantly using UPI, Cards or NetBanking</p>
+        <div class="quick-topup-chips">
+          <button type="button" class="topup-chip" data-amount="100">+ ₹100</button>
+          <button type="button" class="topup-chip" data-amount="250">+ ₹250</button>
+          <button type="button" class="topup-chip" data-amount="500">+ ₹500</button>
+          <button type="button" class="topup-chip" data-amount="1000">+ ₹1,000</button>
+        </div>
+        <div class="topup-input-row">
+          <div class="topup-input-wrap">
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="topupAmountInput" placeholder="Enter amount" min="10" max="10000">
+          </div>
+          <button class="btn-primary" id="addMoneyBtn" type="button">Add Money</button>
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="wallet-history-section">
+        <h3>Recent Transactions</h3>
+        <div class="wallet-tx-list" id="walletTxList">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Tax Invoice Modal -->
+  <div class="modal-overlay hidden" id="invoiceOverlay" aria-hidden="true"></div>
+  <dialog class="invoice-modal" id="invoiceModal" aria-labelledby="invoiceTitle">
+    <div class="invoice-modal-header no-print">
+      <div>
+        <h2 id="invoiceTitle">Order Tax Invoice</h2>
+        <p class="modal-subtitle">Official FSSAI & GST Compliant Grocery Receipt</p>
+      </div>
+      <div class="invoice-modal-actions">
+        <button class="btn-primary btn-sm btn-print-invoice" id="printInvoiceBtn" type="button">
+          🖨️ Print / Save PDF
+        </button>
+        <button class="modal-close" id="invoiceClose" type="button" aria-label="Close invoice">&times;</button>
+      </div>
+    </div>
+
+    <div class="invoice-modal-body" id="invoiceModalBody">
+      <!-- Rendered dynamically for any order -->
+    </div>
+  </dialog>
+
+  <!-- Order Rating Modal -->
+  <div class="modal-overlay hidden" id="orderRatingOverlay" aria-hidden="true"></div>
+  <dialog class="order-rating-modal" id="orderRatingModal" aria-labelledby="orderRatingTitle">
+    <div class="order-rating-header">
+      <div>
+        <h2 id="orderRatingTitle">Rate Your Delivery Experience ⭐</h2>
+        <p class="modal-subtitle">Order #<span id="ratingModalOrderId">QM-84912</span></p>
+      </div>
+      <button class="modal-close" id="orderRatingClose" type="button" aria-label="Close rating">&times;</button>
+    </div>
+
+    <div class="order-rating-body">
+      <!-- Rider Card -->
+      <div class="rate-rider-card">
+        <div class="rate-rider-avatar">🛵</div>
+        <div class="rate-rider-details">
+          <strong>Ramesh Kumar</strong>
+          <small>Delivery Partner &bull; Ather 450X &bull; 4.9 ⭐</small>
+        </div>
+      </div>
+
+      <div class="star-rating-group">
+        <label>How was the delivery speed & service?</label>
+        <div class="stars-interactive" id="orderInteractiveStars">
+          <button type="button" class="star-btn" data-value="1">★</button>
+          <button type="button" class="star-btn" data-value="2">★</button>
+          <button type="button" class="star-btn" data-value="3">★</button>
+          <button type="button" class="star-btn" data-value="4">★</button>
+          <button type="button" class="star-btn active" data-value="5">★</button>
+        </div>
+        <p class="rating-feedback-text" id="orderRatingFeedback">⭐⭐⭐⭐⭐ Excellent Delivery!</p>
+      </div>
+
+      <div class="form-group">
+        <label for="orderReviewComment">Share comments on grocery freshness or packaging:</label>
+        <textarea id="orderReviewComment" class="form-input" rows="3" placeholder="e.g. Items were ice-cold and delivered within 8 minutes!"></textarea>
+      </div>
+
+      <button class="btn-primary btn-full" id="submitOrderRatingBtn" type="button">Submit Feedback</button>
     </div>
   </dialog>
 

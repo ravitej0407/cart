@@ -16,6 +16,10 @@ const WISHLIST_STORAGE_KEY = 'quickmart_favorites';
 const ORDERS_STORAGE_KEY = 'quickmart_orders';
 const ACTIVE_ORDER_STORAGE_KEY = 'quickmart_active_order';
 const COUPON_STORAGE_KEY = 'quickmart_applied_coupon';
+const WALLET_STORAGE_KEY = 'quickmart_wallet_data';
+const SOUND_STORAGE_KEY = 'quickmart_sound_enabled';
+const REVIEWS_STORAGE_KEY = 'quickmart_product_reviews';
+const ORDER_RATINGS_STORAGE_KEY = 'quickmart_order_ratings';
 
 // Default delivery locations
 const DEFAULT_LOCATIONS = [
@@ -196,6 +200,10 @@ let selectedInstructions = new Set();
 let selectedPaymentMethod = 'UPI';
 let activeOrder = loadActiveOrder();
 let trackingTimerInterval = null;
+let isSoundEnabled = localStorage.getItem(SOUND_STORAGE_KEY) !== 'false';
+let selectedDeliveryMode = 'instant';
+let selectedDeliverySlot = 'Tomorrow, 7:00 AM - 8:00 AM';
+let selectedOrderRating = 5;
 
 let activeCategory = 'all';
 let searchQuery = '';
@@ -364,8 +372,309 @@ const elements = {
   loginClose: document.getElementById('loginClose'),
   loginForm: document.getElementById('loginForm'),
   mobileInput: document.getElementById('mobileInput'),
-  loginError: document.getElementById('loginError')
+  loginError: document.getElementById('loginError'),
+
+  // Sound
+  soundToggleBtn: document.getElementById('soundToggleBtn'),
+
+  // QuickCash Wallet
+  walletBtn: document.getElementById('walletBtn'),
+  headerWalletBalance: document.getElementById('headerWalletBalance'),
+  dropdownWalletBtn: document.getElementById('dropdownWalletBtn'),
+  walletModal: document.getElementById('walletModal'),
+  walletOverlay: document.getElementById('walletOverlay'),
+  walletClose: document.getElementById('walletClose'),
+  modalWalletBalance: document.getElementById('modalWalletBalance'),
+  topupAmountInput: document.getElementById('topupAmountInput'),
+  addMoneyBtn: document.getElementById('addMoneyBtn'),
+  walletTxList: document.getElementById('walletTxList'),
+  paymentWalletCard: document.getElementById('paymentWalletCard'),
+  checkoutWalletBalanceLabel: document.getElementById('checkoutWalletBalanceLabel'),
+  checkoutCashbackRow: document.getElementById('checkoutCashbackRow'),
+  checkoutCashbackAmount: document.getElementById('checkoutCashbackAmount'),
+
+  // Voice Search
+  voiceSearchBtn: document.getElementById('voiceSearchBtn'),
+
+  // Cart Upsell & Share
+  shareCartBtn: document.getElementById('shareCartBtn'),
+  cartUpsellSection: document.getElementById('cartUpsellSection'),
+  cartUpsellItems: document.getElementById('cartUpsellItems'),
+
+  // Delivery Mode in Checkout
+  modeInstantLabel: document.getElementById('modeInstantLabel'),
+  modeScheduledLabel: document.getElementById('modeScheduledLabel'),
+  deliverySlotsContainer: document.getElementById('deliverySlotsContainer'),
+  slotPillsGrid: document.getElementById('slotPillsGrid'),
+
+  // Tax Invoice Modal
+  invoiceModal: document.getElementById('invoiceModal'),
+  invoiceOverlay: document.getElementById('invoiceOverlay'),
+  invoiceClose: document.getElementById('invoiceClose'),
+  invoiceModalBody: document.getElementById('invoiceModalBody'),
+  printInvoiceBtn: document.getElementById('printInvoiceBtn'),
+  trackingInvoiceBtn: document.getElementById('trackingInvoiceBtn'),
+
+  // Order Rating Modal
+  orderRatingModal: document.getElementById('orderRatingModal'),
+  orderRatingOverlay: document.getElementById('orderRatingOverlay'),
+  orderRatingClose: document.getElementById('orderRatingClose'),
+  ratingModalOrderId: document.getElementById('ratingModalOrderId'),
+  orderInteractiveStars: document.getElementById('orderInteractiveStars'),
+  orderRatingFeedback: document.getElementById('orderRatingFeedback'),
+  orderReviewComment: document.getElementById('orderReviewComment'),
+  submitOrderRatingBtn: document.getElementById('submitOrderRatingBtn')
 };
+
+// --- Audio & Haptic Feedback System (Web Audio API) ---
+
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playSound(type) {
+  if (!isSoundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    if (type === 'pop') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(840, now + 0.08);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.09);
+    } else if (type === 'remove') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.exponentialRampToValueAtTime(260, now + 0.09);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.1);
+    } else if (type === 'wishlist') {
+      [659, 880, 1046].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+        gain.gain.setValueAtTime(0.12, now + idx * 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.05 + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.05);
+        osc.stop(now + idx * 0.05 + 0.13);
+      });
+    } else if (type === 'coin') {
+      [987, 1318].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+        gain.gain.setValueAtTime(0.2, now + idx * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.06 + 0.18);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.19);
+      });
+    } else if (type === 'coupon') {
+      [523.25, 659.25].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+        gain.gain.setValueAtTime(0.16, now + idx * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.06 + 0.18);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.19);
+      });
+    } else if (type === 'success') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.16, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.26);
+      });
+    }
+  } catch {
+    // Audio restrictions / unsupported
+  }
+}
+
+function initSoundUI() {
+  updateSoundUI();
+  if (elements.soundToggleBtn) {
+    elements.soundToggleBtn.addEventListener('click', toggleSound);
+  }
+}
+
+function toggleSound() {
+  isSoundEnabled = !isSoundEnabled;
+  localStorage.setItem(SOUND_STORAGE_KEY, String(isSoundEnabled));
+  updateSoundUI();
+  if (isSoundEnabled) {
+    playSound('pop');
+    showToast('Sound effects enabled 🔊');
+  } else {
+    showToast('Sound effects muted 🔇');
+  }
+}
+
+function updateSoundUI() {
+  if (!elements.soundToggleBtn) return;
+  const onIcon = elements.soundToggleBtn.querySelector('.sound-icon-on');
+  const offIcon = elements.soundToggleBtn.querySelector('.sound-icon-off');
+  if (onIcon && offIcon) {
+    onIcon.classList.toggle('hidden', !isSoundEnabled);
+    offIcon.classList.toggle('hidden', isSoundEnabled);
+  }
+  elements.soundToggleBtn.title = isSoundEnabled ? 'Sound Effects: ON' : 'Sound Effects: MUTED';
+  elements.soundToggleBtn.setAttribute('aria-label', isSoundEnabled ? 'Mute sound effects' : 'Enable sound effects');
+}
+
+// --- QuickCash Wallet System ---
+
+function loadWallet() {
+  try {
+    const saved = localStorage.getItem(WALLET_STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return {
+    balance: 150,
+    transactions: [
+      {
+        id: 'TX-1001',
+        title: 'Welcome Starter Bonus',
+        type: 'credit',
+        amount: 150,
+        date: Date.now() - 3600000 * 24
+      }
+    ]
+  };
+}
+
+function saveWallet(data) {
+  try {
+    localStorage.setItem(WALLET_STORAGE_KEY, JSON.stringify(data));
+  } catch {}
+  updateWalletUI();
+}
+
+function updateWalletUI() {
+  const wallet = loadWallet();
+  if (elements.headerWalletBalance) {
+    elements.headerWalletBalance.textContent = `₹${wallet.balance}`;
+  }
+  if (elements.modalWalletBalance) {
+    elements.modalWalletBalance.textContent = `₹${wallet.balance.toFixed(2)}`;
+  }
+  if (elements.checkoutWalletBalanceLabel) {
+    elements.checkoutWalletBalanceLabel.textContent = `Available: ₹${wallet.balance} (Earn 5% Cashback on this order!)`;
+  }
+  renderWalletTransactions(wallet.transactions);
+}
+
+function renderWalletTransactions(transactions) {
+  if (!elements.walletTxList) return;
+  if (!transactions || transactions.length === 0) {
+    elements.walletTxList.innerHTML = '<p class="section-subtext" style="text-align: center; padding: 12px 0;">No transactions yet</p>';
+    return;
+  }
+
+  elements.walletTxList.innerHTML = transactions.slice(0, 10).map(tx => {
+    const isCredit = tx.type === 'credit';
+    const dateFormatted = new Date(tx.date).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const icon = isCredit ? (tx.title.includes('Cashback') ? '🎉' : '🪙') : '🛍️';
+
+    return `
+      <div class="tx-item">
+        <div class="tx-left">
+          <div class="tx-icon-wrap">${icon}</div>
+          <div class="tx-info">
+            <strong>${tx.title}</strong>
+            <small>${dateFormatted} &bull; ${tx.id}</small>
+          </div>
+        </div>
+        <span class="tx-amount ${isCredit ? 'credit' : 'debit'}">
+          ${isCredit ? '+' : '-'}₹${tx.amount}
+        </span>
+      </div>
+    `;
+  }).join('');
+}
+
+function openWalletModal() {
+  updateWalletUI();
+  if (elements.walletModal) elements.walletModal.classList.add('open');
+  if (elements.walletOverlay) {
+    elements.walletOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => elements.walletOverlay.classList.add('visible'));
+  }
+}
+
+function closeWalletModal() {
+  if (elements.walletModal) elements.walletModal.classList.remove('open');
+  if (elements.walletOverlay) {
+    elements.walletOverlay.classList.remove('visible');
+    setTimeout(() => elements.walletOverlay.classList.add('hidden'), 300);
+  }
+}
+
+function topUpWallet(amount) {
+  const amt = parseInt(amount, 10);
+  if (isNaN(amt) || amt <= 0) {
+    showToast('Please enter a valid top-up amount');
+    return;
+  }
+  const wallet = loadWallet();
+  wallet.balance += amt;
+  wallet.transactions.unshift({
+    id: 'TX-' + Math.floor(10000 + Math.random() * 90000),
+    title: 'Wallet Top-Up',
+    type: 'credit',
+    amount: amt,
+    date: Date.now()
+  });
+  saveWallet(wallet);
+  playSound('coin');
+  showToast(`🎉 ₹${amt} added to your QuickCash Wallet!`);
+  if (elements.topupAmountInput) elements.topupAmountInput.value = '';
+}
 
 // --- Utility Functions ---
 
@@ -718,9 +1027,11 @@ function toggleWishlist(productId) {
 
   if (index > -1) {
     wishlist.splice(index, 1);
+    playSound('remove');
     showToast(`Removed ${product ? product.name : 'item'} from wishlist`);
   } else {
     wishlist.push(productId);
+    playSound('wishlist');
     showToast(`Added ${product ? product.name : 'item'} to wishlist ❤️`);
   }
 
@@ -855,6 +1166,7 @@ function applyCoupon(code) {
   }
 
   saveAppliedCoupon(cleanCode);
+  playSound('coupon');
   updateCartUI();
   updateCheckoutUI();
   showToast(`Coupon ${cleanCode} applied! 🎉`);
@@ -908,6 +1220,7 @@ function addToCart(productId) {
   updateCartUI();
   renderProducts();
 
+  playSound('pop');
   const product = getProductById(productId);
   if (product) showToast(`${product.name} added to cart`);
 
@@ -918,6 +1231,7 @@ function addToCart(productId) {
 }
 
 function removeFromCart(productId) {
+  playSound('remove');
   cart = cart.filter(c => c.id !== productId);
   saveCart();
   updateCartUI();
@@ -931,6 +1245,9 @@ function removeFromCart(productId) {
 function updateQuantity(productId, delta) {
   const item = cart.find(c => c.id === productId);
   if (!item) return;
+
+  if (delta > 0) playSound('pop');
+  else playSound('remove');
 
   item.quantity += delta;
   if (item.quantity <= 0) {
@@ -1034,6 +1351,8 @@ function updateCartUI() {
   elements.cartItems.classList.toggle('hidden', isEmpty);
   elements.checkoutBtn.disabled = isEmpty;
 
+  renderCartUpsells();
+
   if (isEmpty) {
     elements.cartItems.innerHTML = '';
     return;
@@ -1104,6 +1423,96 @@ function closeCart() {
   setTimeout(() => elements.cartOverlay.classList.add('hidden'), 300);
 }
 
+function renderCartUpsells() {
+  if (!elements.cartUpsellSection || !elements.cartUpsellItems) return;
+  if (cart.length === 0) {
+    elements.cartUpsellSection.classList.add('hidden');
+    return;
+  }
+
+  const stapleIds = [5, 6, 7, 8, 9, 10, 11, 12, 2];
+  const upsells = stapleIds
+    .filter(id => !cart.some(c => c.id === id))
+    .map(id => getProductById(id))
+    .filter(Boolean)
+    .slice(0, 5);
+
+  if (upsells.length === 0) {
+    elements.cartUpsellSection.classList.add('hidden');
+    return;
+  }
+
+  elements.cartUpsellSection.classList.remove('hidden');
+  elements.cartUpsellItems.innerHTML = upsells.map(product => {
+    const fallbackSrc = `images/products/${product.fallback || 'apple.svg'}`;
+    return `
+      <div class="upsell-item-card" data-id="${product.id}">
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+          class="upsell-item-img"
+          loading="lazy"
+          onerror="this.onerror=null; this.src='${fallbackSrc}';"
+        >
+        <span class="upsell-item-name" title="${product.name}">${product.name}</span>
+        <span class="upsell-item-qty">${product.quantity}</span>
+        <span class="upsell-item-price">${formatPrice(product.price)}</span>
+        <button class="btn-upsell-add" type="button" data-upsell-id="${product.id}">+ ADD</button>
+      </div>
+    `;
+  }).join('');
+
+  elements.cartUpsellItems.querySelectorAll('.btn-upsell-add').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const pId = parseInt(btn.dataset.upsellId, 10);
+      addToCart(pId);
+    });
+  });
+}
+
+function shareCart() {
+  if (cart.length === 0) {
+    showToast('Your cart is empty! Add items first.');
+    return;
+  }
+
+  const itemsList = cart.map(item => {
+    const p = getProductById(item.id);
+    return `• ${p ? p.name : 'Item'} (${p ? p.quantity : '1'}) × ${item.quantity} = ${formatPrice((p ? p.price : 0) * item.quantity)}`;
+  }).join('\n');
+
+  const subtotal = getCartSubtotal();
+  const delivery = getDeliveryFee(subtotal);
+  const total = subtotal + delivery;
+
+  const shareText = `🛒 *My QuickMart Grocery List*\n\n${itemsList}\n\n*Total:* ${formatPrice(total)}\n⚡ Guaranteed 10-Minute Lightning Delivery with QuickMart!`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'QuickMart Grocery List',
+      text: shareText
+    }).catch(() => {
+      copyShareTextToClipboard(shareText);
+    });
+  } else {
+    copyShareTextToClipboard(shareText);
+  }
+}
+
+function copyShareTextToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      playSound('pop');
+      showToast('🛒 Grocery list copied to clipboard! Share on WhatsApp.');
+    }).catch(() => {
+      showToast('Could not copy list to clipboard.');
+    });
+  } else {
+    showToast('Sharing is not supported in this browser.');
+  }
+}
+
 // --- Product Rendering & Cards ---
 
 function renderCategories() {
@@ -1163,6 +1572,11 @@ function createProductCard(product) {
         >
       </div>
       <div class="product-info">
+        <div class="product-rating-row">
+          <span class="star-icon">★</span>
+          <strong>${(4.5 + ((product.id * 7) % 5) / 10).toFixed(1)}</strong>
+          <span class="rating-count">(${(250 + ((product.id * 143) % 1800) > 999) ? ((250 + ((product.id * 143) % 1800)) / 1000).toFixed(1) + 'k' : (250 + ((product.id * 143) % 1800))})</span>
+        </div>
         <h3 class="product-name" data-quickview-id="${product.id}">${product.name}</h3>
         <p class="product-qty">${product.quantity}</p>
         <div class="product-prices">
@@ -1410,6 +1824,90 @@ function openProductModal(productId) {
       </div>
     </div>
 
+    <!-- Customer Ratings & Reviews Section -->
+    <div class="product-reviews-section">
+      <div class="reviews-section-header">
+        <h3>Customer Ratings & Reviews</h3>
+        <span class="product-rating-row">
+          <span class="star-icon">★</span>
+          <strong>${(4.5 + ((product.id * 7) % 5) / 10).toFixed(1)} / 5</strong>
+          <span class="rating-count">(${loadProductReviews(product.id).length} reviews)</span>
+        </span>
+      </div>
+
+      <div class="reviews-summary-card">
+        <div class="rating-big-score">
+          <span class="big-rating-number">${(4.5 + ((product.id * 7) % 5) / 10).toFixed(1)}</span>
+          <div class="big-rating-stars">★★★★★</div>
+          <small style="color: var(--text-muted);">Verified Quality</small>
+        </div>
+        <div class="rating-bars-wrap">
+          <div class="rating-bar-row">
+            <span>5★</span>
+            <div class="bar-bg"><div class="bar-fill" style="width: 78%;"></div></div>
+            <span>78%</span>
+          </div>
+          <div class="rating-bar-row">
+            <span>4★</span>
+            <div class="bar-bg"><div class="bar-fill" style="width: 16%;"></div></div>
+            <span>16%</span>
+          </div>
+          <div class="rating-bar-row">
+            <span>3★</span>
+            <div class="bar-bg"><div class="bar-fill" style="width: 4%;"></div></div>
+            <span>4%</span>
+          </div>
+          <div class="rating-bar-row">
+            <span>2★</span>
+            <div class="bar-bg"><div class="bar-fill" style="width: 1%;"></div></div>
+            <span>1%</span>
+          </div>
+          <div class="rating-bar-row">
+            <span>1★</span>
+            <div class="bar-bg"><div class="bar-fill" style="width: 1%;"></div></div>
+            <span>1%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Review Form -->
+      <div class="add-review-card">
+        <h4>Write a Customer Review</h4>
+        <div class="star-picker" id="modalStarPicker">
+          <button type="button" class="star-pick-btn active" data-val="1">★</button>
+          <button type="button" class="star-pick-btn active" data-val="2">★</button>
+          <button type="button" class="star-pick-btn active" data-val="3">★</button>
+          <button type="button" class="star-pick-btn active" data-val="4">★</button>
+          <button type="button" class="star-pick-btn active" data-val="5">★</button>
+        </div>
+        <div class="review-inputs-grid">
+          <input type="text" id="reviewAuthorName" class="form-input" placeholder="Your Name (e.g. Ramesh S.)">
+          <button class="btn-primary" type="button" id="submitProductReviewBtn" data-review-product-id="${product.id}">Post Review</button>
+        </div>
+        <textarea id="reviewCommentText" rows="2" placeholder="Tell us about the quality, taste, freshness or delivery speed..."></textarea>
+      </div>
+
+      <!-- Reviews List -->
+      <div class="reviews-list-container">
+        ${loadProductReviews(product.id).map(rev => `
+          <div class="customer-review-card">
+            <div class="review-author-row">
+              <div class="author-meta">
+                <span class="author-avatar">${rev.name.charAt(0).toUpperCase()}</span>
+                <strong>${rev.name}</strong>
+                ${rev.verified ? '<span class="verified-buyer-badge">✓ Verified Buyer</span>' : ''}
+              </div>
+              <div class="review-stars-date">
+                <span class="review-stars">${'★'.repeat(rev.rating)}</span>
+                <span class="review-date">${rev.date}</span>
+              </div>
+            </div>
+            <p class="review-text-content">${rev.text}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
     ${related.length > 0 ? `
       <div class="related-products-section">
         <h3>You Might Also Like in ${product.category}</h3>
@@ -1439,6 +1937,27 @@ function openProductModal(productId) {
       modalWishlistBtn.classList.toggle('active', isNowWish);
       const svg = modalWishlistBtn.querySelector('svg');
       if (svg) svg.setAttribute('fill', isNowWish ? '#ef4444' : 'none');
+    });
+  }
+
+  // Star picker clicks in product modal
+  const starPicker = elements.productModalBody.querySelector('#modalStarPicker');
+  if (starPicker) {
+    const starBtns = starPicker.querySelectorAll('.star-pick-btn');
+    starBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.val, 10);
+        starBtns.forEach(b => {
+          b.classList.toggle('active', parseInt(b.dataset.val, 10) <= val);
+        });
+      });
+    });
+  }
+
+  const submitReviewBtn = elements.productModalBody.querySelector('#submitProductReviewBtn');
+  if (submitReviewBtn) {
+    submitReviewBtn.addEventListener('click', () => {
+      submitProductReview(product.id);
     });
   }
 
@@ -1490,6 +2009,75 @@ function closeProductModal() {
     elements.productModalOverlay.classList.remove('visible');
     setTimeout(() => elements.productModalOverlay.classList.add('hidden'), 300);
   }
+}
+
+// --- Product Ratings & Customer Reviews System ---
+
+const defaultReviews = {
+  1: [
+    { name: 'Pooja Sharma', rating: 5, date: '2 days ago', verified: true, text: 'Super crisp and sweet Shimla apples! Delivered in just 7 minutes.' },
+    { name: 'Vikram Joshi', rating: 5, date: '1 week ago', verified: true, text: 'Great packaging, individually wrapped and fresh.' }
+  ],
+  9: [
+    { name: 'Amit Desai', rating: 5, date: 'Yesterday', verified: true, text: 'Ice cold and perfectly chilled packet. Everyday morning essential!' }
+  ],
+  4: [
+    { name: 'Sneha Patel', rating: 5, date: '3 days ago', verified: true, text: 'Extremely sweet and aromatic Alphonso mangoes. Best of the season!' }
+  ],
+  5: [
+    { name: 'Rajesh K.', rating: 5, date: 'Yesterday', verified: true, text: 'Firm and ripe tomatoes with great shelf life. No bruised pieces.' }
+  ]
+};
+
+function loadProductReviews(productId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(REVIEWS_STORAGE_KEY) || '{}');
+    const custom = all[productId] || [];
+    const defaults = defaultReviews[productId] || [
+      { name: 'Verified Customer', rating: 5, date: '3 days ago', verified: true, text: 'Top quality product, exactly as described. Lightning-fast 10-min delivery!' }
+    ];
+    return [...custom, ...defaults];
+  } catch {
+    return defaultReviews[productId] || [];
+  }
+}
+
+function saveProductReview(productId, review) {
+  try {
+    const all = JSON.parse(localStorage.getItem(REVIEWS_STORAGE_KEY) || '{}');
+    if (!all[productId]) all[productId] = [];
+    all[productId].unshift(review);
+    localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(all));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function submitProductReview(productId) {
+  const nameInput = document.getElementById('reviewAuthorName');
+  const textInput = document.getElementById('reviewCommentText');
+  const name = nameInput ? nameInput.value.trim() : '';
+  const text = textInput ? textInput.value.trim() : '';
+  const starsActive = document.querySelectorAll('.star-picker .star-pick-btn.active');
+  const rating = starsActive.length || 5;
+
+  if (!text) {
+    showToast('Please enter your review comments');
+    return;
+  }
+
+  const newReview = {
+    name: name || (currentUser ? currentUser.name : 'QuickMart Shopper'),
+    rating,
+    date: 'Just now',
+    verified: true,
+    text
+  };
+
+  saveProductReview(productId, newReview);
+  playSound('coupon');
+  showToast('Thank you! Your review has been published. ⭐');
+  openProductModal(productId);
 }
 
 // --- Checkout Modal Flow ---
@@ -1549,6 +2137,21 @@ function updateCheckoutUI() {
   }
 
   if (elements.checkoutTotal) elements.checkoutTotal.textContent = formatPrice(total);
+
+  // Update wallet & cashback in checkout
+  const wallet = loadWallet();
+  if (elements.checkoutWalletBalanceLabel) {
+    if (wallet.balance >= total) {
+      elements.checkoutWalletBalanceLabel.textContent = `Balance: ₹${wallet.balance} (Covers full order! +5% Cashback)`;
+    } else {
+      elements.checkoutWalletBalanceLabel.textContent = `Balance: ₹${wallet.balance} (₹${wallet.balance} from wallet + ₹${total - wallet.balance} via UPI)`;
+    }
+  }
+
+  const cashback = Math.max(1, Math.round(total * 0.05));
+  if (elements.checkoutCashbackAmount) {
+    elements.checkoutCashbackAmount.textContent = `+₹${cashback} into Wallet`;
+  }
 }
 
 function handlePlaceOrder() {
@@ -1603,8 +2206,41 @@ function handlePlaceOrder() {
       }
     };
 
+    newOrder.deliveryMode = selectedDeliveryMode;
+    newOrder.deliverySlot = selectedDeliveryMode === 'scheduled' ? selectedDeliverySlot : '10-Minute Express';
+
+    // Handle QuickCash Wallet payment if chosen
+    if (selectedPaymentMethod === 'Wallet') {
+      const wallet = loadWallet();
+      const deductAmt = Math.min(wallet.balance, total);
+      wallet.balance = Math.max(0, wallet.balance - deductAmt);
+      wallet.transactions.unshift({
+        id: 'TX-' + Math.floor(10000 + Math.random() * 90000),
+        title: `Order #${orderId} Payment`,
+        type: 'debit',
+        amount: deductAmt,
+        date: Date.now()
+      });
+      saveWallet(wallet);
+      newOrder.paidViaWallet = deductAmt;
+    }
+
+    // Award 5% Instant Cashback on every order
+    const cashback = Math.max(1, Math.round(total * 0.05));
+    const walletAfter = loadWallet();
+    walletAfter.balance += cashback;
+    walletAfter.transactions.unshift({
+      id: 'TX-CB-' + Math.floor(10000 + Math.random() * 90000),
+      title: `🎉 5% Order Cashback (#${orderId})`,
+      type: 'credit',
+      amount: cashback,
+      date: Date.now()
+    });
+    saveWallet(walletAfter);
+
     saveOrder(newOrder);
     setActiveOrder(newOrder);
+    playSound('success');
 
     // Clear cart and state
     cart = [];
@@ -1620,7 +2256,8 @@ function handlePlaceOrder() {
 
     closeCheckoutModal();
     openTrackingModal(newOrder);
-    showToast(`Order #${orderId} placed! Delivery in 10 minutes.`);
+    const cbEarned = Math.max(1, Math.round(total * 0.05));
+    showToast(`🎉 Order #${orderId} placed! ₹${cbEarned} cashback credited to your QuickCash Wallet! 🪙`);
   }, 700);
 }
 
@@ -1839,7 +2476,7 @@ function renderOrdersList() {
         <div class="order-card-header">
           <div class="order-id-date">
             <strong>Order #${ord.id}</strong>
-            <small>${dateFormatted} &bull; ${ord.address ? ord.address.tag : 'Home'}</small>
+            <small>${dateFormatted} &bull; ${ord.address ? ord.address.tag : 'Home'} &bull; ${ord.deliveryMode === 'scheduled' ? '📅 ' + (ord.deliverySlot || 'Scheduled') : '⚡ 10-Min'}</small>
           </div>
           <span class="order-status-pill ${statusClass}">${statusLabel}</span>
         </div>
@@ -1847,6 +2484,8 @@ function renderOrdersList() {
         <div class="order-card-footer">
           <span class="order-total-price">${formatPrice(ord.total)} (${ord.paymentMethod || 'UPI'})</span>
           <div class="order-actions-wrap">
+            <button class="btn-invoice" type="button" onclick="openInvoiceModal('${ord.id}')">📄 Invoice</button>
+            <button class="btn-rate-order" type="button" onclick="openOrderRatingModal('${ord.id}')">${isOrderRated(ord.id) ? 'Rated ⭐' : '⭐ Rate'}</button>
             ${statusClass === 'in_transit' ? `
               <button class="btn-primary btn-sm" type="button" onclick="closeOrdersModal(); openTrackingModal();">Track</button>
             ` : ''}
@@ -1878,6 +2517,254 @@ function reorderOrder(orderId) {
   closeOrdersModal();
   openCart();
   showToast(`Reordered ${order.items.length} items to your cart! 🛒`);
+}
+
+// --- Tax Invoice Generator Modal ---
+
+function openInvoiceModal(orderId) {
+  let order = null;
+  if (orderId) {
+    const orders = loadOrders();
+    order = orders.find(o => o.id === orderId);
+  }
+  if (!order && activeOrder) {
+    order = activeOrder;
+  }
+  if (!order) {
+    showToast('Order not found');
+    return;
+  }
+
+  const dateFormatted = new Date(order.date).toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const address = order.address || { tag: 'Home', house: 'Flat 402, Sunshine Heights', area: 'Bandra West', city: 'Mumbai', pincode: '400050' };
+  const user = currentUser || { name: 'QuickMart Customer', mobile: '+91 98765 43210' };
+
+  let totalTax = 0;
+  const itemsRows = order.items.map((item, idx) => {
+    const p = getProductById(item.id) || item;
+    const isExempt = p.category === 'Fruits' || p.category === 'Vegetables' || p.category === 'Fresh';
+    const gstRate = isExempt ? 0 : 5;
+    const itemTotal = item.price * item.quantity;
+    const taxAmt = isExempt ? 0 : Math.round((itemTotal * (gstRate / (100 + gstRate))));
+    totalTax += taxAmt;
+
+    return `
+      <tr>
+        <td>${idx + 1}</td>
+        <td>
+          <strong>${item.name}</strong><br>
+          <small style="color: #64748b;">HSN: ${isExempt ? '0709' : '2106'} &bull; Net: ${p.quantity || '1 unit'}</small>
+        </td>
+        <td class="col-right">${formatPrice(item.price)}</td>
+        <td class="col-right">${item.quantity}</td>
+        <td class="col-right">${gstRate}%</td>
+        <td class="col-right"><strong>${formatPrice(itemTotal)}</strong></td>
+      </tr>
+    `;
+  }).join('');
+
+  elements.invoiceModalBody.innerHTML = `
+    <div class="invoice-sheet">
+      <div class="invoice-sheet-top">
+        <div class="invoice-brand">
+          <h2>QuickMart Groceries</h2>
+          <p>
+            QuickMart Dark Store #042 &bull; Bandra West, Mumbai 400050<br>
+            <strong>GSTIN:</strong> 27AABCQ1234M1Z5 &bull; <strong>FSSAI Lic:</strong> 11521018000452
+          </p>
+        </div>
+        <div class="invoice-meta-block">
+          <span class="inv-num">INVOICE #${order.id}</span>
+          <p style="margin-top: 4px; color: #475569;">
+            Date: <strong>${dateFormatted}</strong><br>
+            Delivery: <strong>${order.deliveryMode === 'scheduled' ? (order.deliverySlot || 'Scheduled') : '⚡ 10-Min Lightning Delivery'}</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="invoice-parties-grid">
+        <div class="invoice-party-col">
+          <h4>Billed To / Delivered To:</h4>
+          <strong>${user.name}</strong>
+          <p>
+            ${address.house ? address.house + ', ' : ''}${address.area || 'Bandra West'}<br>
+            ${address.city || 'Mumbai'} - ${address.pincode || '400050'}<br>
+            Phone: ${user.mobile}
+          </p>
+        </div>
+        <div class="invoice-party-col">
+          <h4>Delivery & Payment Info:</h4>
+          <p>
+            Payment Mode: <strong>${order.paymentMethod || 'UPI'}</strong><br>
+            Payment Status: <strong style="color: #059669;">PAID (Verified)</strong><br>
+            Delivery Partner: <strong>Ramesh Kumar (Ather 450X)</strong><br>
+            Instructions: ${order.instructions && order.instructions.length ? order.instructions.join(', ') : 'Standard Drop-off'}
+          </p>
+        </div>
+      </div>
+
+      <div class="invoice-table-wrap">
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th style="width: 30px;">#</th>
+              <th>Description & HSN</th>
+              <th class="col-right">Rate</th>
+              <th class="col-right">Qty</th>
+              <th class="col-right">GST</th>
+              <th class="col-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsRows}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="invoice-calc-grid">
+        <div class="invoice-calc-box">
+          <div class="inv-calc-row">
+            <span>Items Subtotal:</span>
+            <span>${formatPrice(order.subtotal)}</span>
+          </div>
+          ${order.discount > 0 ? `
+            <div class="inv-calc-row" style="color: #059669;">
+              <span>Promo Discount (${order.coupon || 'Coupon'}):</span>
+              <span>-${formatPrice(order.discount)}</span>
+            </div>
+          ` : ''}
+          <div class="inv-calc-row">
+            <span>Delivery Partner Fee:</span>
+            <span>${order.deliveryFee === 0 ? 'FREE' : formatPrice(order.deliveryFee)}</span>
+          </div>
+          ${order.tip > 0 ? `
+            <div class="inv-calc-row">
+              <span>Delivery Partner Tip (100% to rider):</span>
+              <span>${formatPrice(order.tip)}</span>
+            </div>
+          ` : ''}
+          <div class="inv-calc-row">
+            <span>Platform Handling & GST:</span>
+            <span>₹2 (incl. ₹${totalTax} total tax)</span>
+          </div>
+          <div class="inv-calc-row inv-grand-total">
+            <span>Total Amount Paid:</span>
+            <span>${formatPrice(order.total)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="invoice-sheet-bottom">
+        <div>
+          <span class="inv-stamp">✓ QUICKMART VERIFIED INVOICE</span>
+          <p style="margin-top: 4px;">Computer-generated tax invoice. No signature required.</p>
+        </div>
+        <div style="text-align: right;">
+          <p>Questions? Contact support@quickmart.in &bull; 1800-QUICK-MART</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (elements.invoiceModal) elements.invoiceModal.classList.add('open');
+  if (elements.invoiceOverlay) {
+    elements.invoiceOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => elements.invoiceOverlay.classList.add('visible'));
+  }
+}
+
+function closeInvoiceModal() {
+  if (elements.invoiceModal) elements.invoiceModal.classList.remove('open');
+  if (elements.invoiceOverlay) {
+    elements.invoiceOverlay.classList.remove('visible');
+    setTimeout(() => elements.invoiceOverlay.classList.add('hidden'), 300);
+  }
+}
+
+// --- Order Rating & Experience Modal ---
+
+let currentRatingOrderId = null;
+
+function isOrderRated(orderId) {
+  try {
+    const ratings = JSON.parse(localStorage.getItem(ORDER_RATINGS_STORAGE_KEY) || '{}');
+    return !!ratings[orderId];
+  } catch {
+    return false;
+  }
+}
+
+function openOrderRatingModal(orderId) {
+  currentRatingOrderId = orderId;
+  selectedOrderRating = 5;
+
+  if (elements.ratingModalOrderId) elements.ratingModalOrderId.textContent = orderId;
+  updateInteractiveRatingStars(5);
+
+  if (elements.orderReviewComment) elements.orderReviewComment.value = '';
+
+  if (elements.orderRatingModal) elements.orderRatingModal.classList.add('open');
+  if (elements.orderRatingOverlay) {
+    elements.orderRatingOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => elements.orderRatingOverlay.classList.add('visible'));
+  }
+}
+
+function closeOrderRatingModal() {
+  if (elements.orderRatingModal) elements.orderRatingModal.classList.remove('open');
+  if (elements.orderRatingOverlay) {
+    elements.orderRatingOverlay.classList.remove('visible');
+    setTimeout(() => elements.orderRatingOverlay.classList.add('hidden'), 300);
+  }
+}
+
+function updateInteractiveRatingStars(rating) {
+  selectedOrderRating = rating;
+  if (!elements.orderInteractiveStars) return;
+  const stars = elements.orderInteractiveStars.querySelectorAll('.star-btn');
+  stars.forEach((star, index) => {
+    star.classList.toggle('active', index < rating);
+  });
+
+  const feedbackMessages = {
+    1: '⭐ Poor — Needs Improvement',
+    2: '⭐⭐ Fair — Could be Better',
+    3: '⭐⭐⭐ Good — Satisfactory',
+    4: '⭐⭐⭐⭐ Very Good — Fast & Fresh!',
+    5: '⭐⭐⭐⭐⭐ Excellent Delivery & Service!'
+  };
+  if (elements.orderRatingFeedback) {
+    elements.orderRatingFeedback.textContent = feedbackMessages[rating] || 'Thank you!';
+  }
+}
+
+function submitOrderRating() {
+  if (!currentRatingOrderId) return;
+  const comment = elements.orderReviewComment ? elements.orderReviewComment.value.trim() : '';
+
+  try {
+    const ratings = JSON.parse(localStorage.getItem(ORDER_RATINGS_STORAGE_KEY) || '{}');
+    ratings[currentRatingOrderId] = {
+      stars: selectedOrderRating,
+      comment,
+      date: Date.now()
+    };
+    localStorage.setItem(ORDER_RATINGS_STORAGE_KEY, JSON.stringify(ratings));
+  } catch (err) {
+    console.error(err);
+  }
+
+  playSound('coin');
+  showToast('Thank you! Your rating for Ramesh Kumar & QuickMart was submitted. ⭐');
+  closeOrderRatingModal();
+  renderOrdersList();
 }
 
 // --- Search & Filters ---
@@ -1913,6 +2800,84 @@ function updateFilterChipsUI() {
   elements.filterChips.querySelectorAll('.filter-chip').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.filter === activeFilter);
   });
+}
+
+// --- Voice Search (Web Speech API) ---
+
+let speechRecognition = null;
+let isVoiceListening = false;
+
+function initVoiceSearch() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    if (elements.voiceSearchBtn) {
+      elements.voiceSearchBtn.addEventListener('click', () => {
+        showToast('Voice search is not supported in this browser. Please type to search. 🎙️');
+      });
+    }
+    return;
+  }
+
+  try {
+    speechRecognition = new SpeechRecognition();
+    speechRecognition.continuous = false;
+    speechRecognition.interimResults = false;
+    speechRecognition.lang = 'en-IN';
+
+    speechRecognition.onstart = () => {
+      isVoiceListening = true;
+      if (elements.voiceSearchBtn) elements.voiceSearchBtn.classList.add('listening');
+      if (elements.searchInput) {
+        elements.searchInput.placeholder = 'Listening... Speak grocery item (e.g. "Milk", "Mango")';
+        elements.searchInput.focus();
+      }
+      playSound('coin');
+      showToast('🎙️ Listening... speak now');
+    };
+
+    speechRecognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      if (elements.searchInput) {
+        elements.searchInput.value = transcript;
+        handleSearch(transcript);
+        const results = document.querySelector('.search-results');
+        if (results) results.scrollIntoView({ behavior: 'smooth' });
+      }
+      playSound('pop');
+      showToast(`🎙️ Heard: "${transcript}"`);
+    };
+
+    speechRecognition.onerror = (event) => {
+      isVoiceListening = false;
+      if (elements.voiceSearchBtn) elements.voiceSearchBtn.classList.remove('listening');
+      if (elements.searchInput) {
+        elements.searchInput.placeholder = 'Search for "milk", "fruits", "rice", "shampoo"...';
+      }
+      if (event.error !== 'no-speech') {
+        showToast('Could not recognize voice. Please try again or type.');
+      }
+    };
+
+    speechRecognition.onend = () => {
+      isVoiceListening = false;
+      if (elements.voiceSearchBtn) elements.voiceSearchBtn.classList.remove('listening');
+      if (elements.searchInput) {
+        elements.searchInput.placeholder = 'Search for "milk", "fruits", "rice", "shampoo"...';
+      }
+    };
+
+    if (elements.voiceSearchBtn) {
+      elements.voiceSearchBtn.addEventListener('click', () => {
+        if (isVoiceListening) {
+          speechRecognition.stop();
+        } else {
+          speechRecognition.start();
+        }
+      });
+    }
+  } catch (err) {
+    console.error('Speech recognition setup failed:', err);
+  }
 }
 
 // --- Login Modal ---
@@ -2228,6 +3193,87 @@ function initEventListeners() {
   const footerLoc = document.getElementById('footerLocationLink');
   if (footerLoc) footerLoc.addEventListener('click', (e) => { e.preventDefault(); openLocationModal(); });
 
+  // Share Cart
+  if (elements.shareCartBtn) elements.shareCartBtn.addEventListener('click', shareCart);
+
+  // Delivery Mode in Checkout
+  if (elements.modeInstantLabel && elements.modeScheduledLabel) {
+    elements.modeInstantLabel.addEventListener('click', () => {
+      selectedDeliveryMode = 'instant';
+      elements.modeInstantLabel.classList.add('active');
+      elements.modeScheduledLabel.classList.remove('active');
+      if (elements.deliverySlotsContainer) elements.deliverySlotsContainer.classList.add('hidden');
+    });
+    elements.modeScheduledLabel.addEventListener('click', () => {
+      selectedDeliveryMode = 'scheduled';
+      elements.modeScheduledLabel.classList.add('active');
+      elements.modeInstantLabel.classList.remove('active');
+      if (elements.deliverySlotsContainer) elements.deliverySlotsContainer.classList.remove('hidden');
+    });
+  }
+
+  if (elements.slotPillsGrid) {
+    elements.slotPillsGrid.querySelectorAll('.slot-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        elements.slotPillsGrid.querySelectorAll('.slot-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const radio = pill.querySelector('input[name="deliverySlot"]');
+        if (radio) {
+          radio.checked = true;
+          selectedDeliverySlot = radio.value;
+        }
+      });
+    });
+  }
+
+  // QuickCash Wallet Modal
+  if (elements.walletBtn) elements.walletBtn.addEventListener('click', openWalletModal);
+  if (elements.dropdownWalletBtn) {
+    elements.dropdownWalletBtn.addEventListener('click', () => {
+      if (elements.userDropdown) elements.userDropdown.classList.add('hidden');
+      openWalletModal();
+    });
+  }
+  if (elements.walletClose) elements.walletClose.addEventListener('click', closeWalletModal);
+  if (elements.walletOverlay) elements.walletOverlay.addEventListener('click', closeWalletModal);
+
+  document.querySelectorAll('.topup-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      topUpWallet(chip.dataset.amount);
+    });
+  });
+
+  if (elements.addMoneyBtn && elements.topupAmountInput) {
+    elements.addMoneyBtn.addEventListener('click', () => {
+      topUpWallet(elements.topupAmountInput.value);
+    });
+  }
+
+  // Invoice Modal
+  if (elements.invoiceClose) elements.invoiceClose.addEventListener('click', closeInvoiceModal);
+  if (elements.invoiceOverlay) elements.invoiceOverlay.addEventListener('click', closeInvoiceModal);
+  if (elements.printInvoiceBtn) elements.printInvoiceBtn.addEventListener('click', () => window.print());
+  if (elements.trackingInvoiceBtn) {
+    elements.trackingInvoiceBtn.addEventListener('click', () => {
+      openInvoiceModal(activeOrder ? activeOrder.id : null);
+    });
+  }
+
+  // Order Rating Modal
+  if (elements.orderRatingClose) elements.orderRatingClose.addEventListener('click', closeOrderRatingModal);
+  if (elements.orderRatingOverlay) elements.orderRatingOverlay.addEventListener('click', closeOrderRatingModal);
+  if (elements.orderInteractiveStars) {
+    elements.orderInteractiveStars.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.value, 10);
+        updateInteractiveRatingStars(val);
+      });
+    });
+  }
+  if (elements.submitOrderRatingBtn) {
+    elements.submitOrderRatingBtn.addEventListener('click', submitOrderRating);
+  }
+
   // Escape key closes any open modal
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -2239,6 +3285,9 @@ function initEventListeners() {
       closeOrdersModal();
       closeWishlistModal();
       closeProductModal();
+      closeWalletModal();
+      closeInvoiceModal();
+      closeOrderRatingModal();
       if (elements.userDropdown) elements.userDropdown.classList.add('hidden');
     }
   });
@@ -2265,6 +3314,9 @@ function checkRedirectToast() {
 
 function init() {
   initTheme();
+  initSoundUI();
+  initWalletUI();
+  initVoiceSearch();
   updateAuthUI();
   updateHeaderLocationUI();
   updateWishlistUI();

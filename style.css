@@ -4569,3 +4569,1542 @@ dialog {
     font-size: 0.9rem;
   }
 }
+
+/* ==========================================================================
+   ADDITIONAL ENHANCED FEATURES STYLES
+   - QuickCash Wallet Modal & Header Pill
+   - Voice Search Microphone & Pulsing Animation
+   - Sound Toggle Button & Audio Feedback
+   - Smart Cart Upsell ("Don't Forget These Essentials")
+   - Share Cart Button
+   - Delivery Timing Mode & Slot Picker
+   - Tax Invoice / Printable Receipt Modal & @media print
+   - Product Star Ratings & Customer Reviews Tab + Interactive Form
+   - Order Rating & Rider Review Modal
+   - Dark Mode Overrides for all New Components
+   ========================================================================== */
+
+/* --- Sound Toggle Button --- */
+.btn-sound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.btn-sound:hover {
+  background: var(--bg-surface-hover);
+  transform: translateY(-1px);
+  border-color: var(--primary);
+}
+
+.btn-sound .sound-icon-off {
+  opacity: 0.6;
+}
+
+/* --- QuickCash Wallet Header Pill --- */
+.btn-wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.9), rgba(253, 230, 138, 0.9));
+  color: #92400e;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+}
+
+.btn-wallet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+}
+
+.wallet-coin {
+  font-size: 1.1rem;
+  display: inline-block;
+  animation: coinBob 3s ease-in-out infinite;
+}
+
+@keyframes coinBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px) rotate(8deg); }
+}
+
+.wallet-balance-pill {
+  letter-spacing: -0.2px;
+}
+
+.dropdown-coin-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* --- Voice Search Button & Mic Pulse --- */
+.search-voice {
+  position: absolute;
+  right: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-voice:hover {
+  color: var(--primary);
+  background: var(--bg-surface-hover);
+}
+
+.search-voice.listening {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  animation: micPulse 1.2s infinite;
+}
+
+@keyframes micPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* --- Cart Header Actions & Share Cart --- */
+.cart-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-share-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-share-cart:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-share-cart .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* --- Smart Cart Upsell Section ("Don't Forget These") --- */
+.cart-upsell-section {
+  padding: 14px 18px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.upsell-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.upsell-heading {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.1px;
+}
+
+.upsell-items-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.upsell-item-card {
+  flex: 0 0 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: all 0.2s ease;
+}
+
+.upsell-item-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.upsell-item-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin-bottom: 6px;
+  border-radius: 6px;
+}
+
+.upsell-item-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
+  margin-bottom: 2px;
+}
+
+.upsell-item-qty {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.upsell-item-price {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.btn-upsell-add {
+  width: 100%;
+  padding: 4px 0;
+  border-radius: 12px;
+  border: 1px solid var(--primary);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-upsell-add:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* --- Checkout Delivery Mode & Slots --- */
+.delivery-mode-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.delivery-mode-card {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.delivery-mode-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.delivery-mode-card:hover {
+  border-color: var(--primary);
+}
+
+.delivery-mode-card.active {
+  border-color: var(--primary);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.delivery-mode-card .dm-content strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.delivery-mode-card .dm-content small {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.delivery-slots-container {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.slots-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.slot-pills-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.slot-pill {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.15s ease;
+}
+
+.slot-pill input[type="radio"] {
+  display: none;
+}
+
+.slot-pill:hover {
+  border-color: var(--primary);
+}
+
+.slot-pill.active {
+  border-color: var(--primary);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* --- Cashback Row in Checkout --- */
+.cashback-row {
+  background: rgba(16, 185, 129, 0.08);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* --- Tracking Header Actions & Invoice Button --- */
+.tracking-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-tracking-invoice {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-tracking-invoice:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--bg-surface-hover);
+}
+
+/* --- QuickCash Wallet Modal --- */
+.wallet-modal {
+  width: 90%;
+  max-width: 520px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+.wallet-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.wallet-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}
+
+.wallet-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wallet-icon-badge {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.wallet-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.wallet-modal-body {
+  padding: 20px 24px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+/* Wallet Balance Card */
+.wallet-balance-card {
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(4, 120, 87, 0.25);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-balance-card::after {
+  content: "🪙";
+  position: absolute;
+  right: -10px;
+  bottom: -15px;
+  font-size: 5rem;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.balance-meta small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 6px;
+}
+
+.balance-display {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.cashback-badge-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* Top-Up Section */
+.wallet-topup-section {
+  margin-bottom: 24px;
+}
+
+.wallet-topup-section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.quick-topup-chips {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.topup-chip {
+  padding: 8px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.topup-chip:hover {
+  border-color: var(--primary);
+  background: rgba(16, 185, 129, 0.08);
+  color: var(--primary);
+}
+
+.topup-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.topup-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.topup-input-wrap .currency-symbol {
+  position: absolute;
+  left: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.topup-input-wrap input {
+  width: 100%;
+  padding: 10px 14px 10px 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.topup-input-wrap input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Wallet Transactions Ledger */
+.wallet-history-section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.wallet-tx-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tx-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.tx-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tx-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+.tx-info strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.tx-info small {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.tx-amount {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.tx-amount.credit {
+  color: var(--success);
+}
+
+.tx-amount.debit {
+  color: #ef4444;
+}
+
+/* --- Tax Invoice Modal & Print View --- */
+.invoice-modal {
+  width: 95%;
+  max-width: 680px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+.invoice-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.invoice-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}
+
+.invoice-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-print-invoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 0.84rem;
+}
+
+.invoice-modal-body {
+  padding: 24px;
+  max-height: 80vh;
+  overflow-y: auto;
+  font-size: 0.86rem;
+  color: var(--text);
+}
+
+/* Invoice Printable Document Layout */
+.invoice-sheet {
+  background: #ffffff;
+  color: #1e293b;
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.invoice-sheet-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #0f172a;
+  margin-bottom: 16px;
+}
+
+.invoice-brand h2 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.invoice-brand p {
+  font-size: 0.76rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.invoice-meta-block {
+  text-align: right;
+  font-size: 0.78rem;
+}
+
+.invoice-meta-block .inv-num {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.invoice-parties-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+}
+
+.invoice-party-col h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.invoice-party-col strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.invoice-party-col p {
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* Invoice Items Table */
+.invoice-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.invoice-table th {
+  background: #f8fafc;
+  color: #475569;
+  text-align: left;
+  padding: 8px 10px;
+  font-weight: 700;
+  border-bottom: 1.5px solid #cbd5e1;
+}
+
+.invoice-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.invoice-table .col-right {
+  text-align: right;
+}
+
+/* Invoice Calculation Summary */
+.invoice-calc-grid {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.invoice-calc-box {
+  width: 280px;
+}
+
+.inv-calc-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.inv-calc-row.inv-grand-total {
+  border-top: 1.5px solid #0f172a;
+  padding-top: 8px;
+  margin-top: 4px;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.invoice-sheet-bottom {
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.inv-stamp {
+  font-weight: 700;
+  color: #059669;
+  border: 1.5px solid #059669;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* --- Product Card Star Rating --- */
+.product-rating-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.76rem;
+  color: #d97706;
+  margin-bottom: 4px;
+}
+
+.product-rating-row .star-icon {
+  font-size: 0.85rem;
+}
+
+.product-rating-row strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.product-rating-row .rating-count {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* --- Product Detail Reviews Tab & Form --- */
+.product-reviews-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.reviews-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.reviews-section-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.reviews-summary-card {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 20px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.rating-big-score {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-rating-number {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+}
+
+.big-rating-stars {
+  color: #f59e0b;
+  font-size: 1rem;
+  margin: 4px 0;
+}
+
+.rating-bars-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.rating-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.bar-bg {
+  flex: 1;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #f59e0b;
+  border-radius: 3px;
+}
+
+/* Add Review Form in Product Modal */
+.add-review-card {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.add-review-card h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.star-picker {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.star-pick-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.star-pick-btn:hover,
+.star-pick-btn.active {
+  color: #f59e0b;
+  transform: scale(1.15);
+}
+
+.review-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.add-review-card textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.84rem;
+  margin-bottom: 10px;
+}
+
+/* Reviews List */
+.reviews-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.customer-review-card {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.review-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.author-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.author-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.author-meta strong {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.verified-buyer-badge {
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.review-stars-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+}
+
+.review-stars {
+  color: #f59e0b;
+}
+
+.review-date {
+  color: var(--text-muted);
+}
+
+.review-text-content {
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+/* --- Order Rating Modal --- */
+.order-rating-modal {
+  width: 90%;
+  max-width: 480px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+.order-rating-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.order-rating-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}
+
+.order-rating-body {
+  padding: 24px;
+}
+
+.rate-rider-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.rate-rider-avatar {
+  font-size: 2.2rem;
+}
+
+.rate-rider-details strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.rate-rider-details small {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.star-rating-group {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.star-rating-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.stars-interactive {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stars-interactive .star-btn {
+  background: transparent;
+  border: none;
+  font-size: 2.2rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.stars-interactive .star-btn:hover,
+.stars-interactive .star-btn.active {
+  color: #f59e0b;
+  transform: scale(1.2);
+}
+
+.rating-feedback-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #d97706;
+}
+
+.btn-invoice,
+.btn-rate-order {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-invoice:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-rate-order:hover {
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+/* ==========================================================================
+   DARK MODE OVERRIDES FOR NEW FEATURES
+   Ensuring high contrast, elevated surfaces (#1c273e, #253350), visible texts
+   ========================================================================== */
+[data-theme="dark"] .btn-wallet {
+  background: linear-gradient(135deg, #1e293b, #253350);
+  border-color: #f59e0b;
+  color: #fef08a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .btn-sound {
+  background: #1c273e;
+  border-color: #2d3c58;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-sound:hover {
+  background: #253350;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .search-voice {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .search-voice:hover {
+  color: #38bdf8;
+  background: #1c273e;
+}
+
+[data-theme="dark"] .btn-share-cart {
+  background: #1c273e;
+  border-color: #2d3c58;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-share-cart:hover {
+  background: #253350;
+  border-color: #10b981;
+  color: #10b981;
+}
+
+[data-theme="dark"] .cart-upsell-section {
+  background: #141c2e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .upsell-heading {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .upsell-item-card {
+  background: #1c273e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .upsell-item-card:hover {
+  border-color: #10b981;
+  background: #253350;
+}
+
+[data-theme="dark"] .upsell-item-name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .upsell-item-price {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .delivery-mode-card {
+  background: #1c273e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .delivery-mode-card:hover {
+  border-color: #10b981;
+}
+
+[data-theme="dark"] .delivery-mode-card.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+[data-theme="dark"] .delivery-mode-card .dm-content strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .delivery-mode-card .dm-content small {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .slot-pill {
+  background: #1c273e;
+  border-color: #2d3c58;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .slot-pill.active {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+[data-theme="dark"] .cashback-row {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+[data-theme="dark"] .btn-tracking-invoice {
+  background: #253350;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-tracking-invoice:hover {
+  background: #334155;
+  border-color: #10b981;
+  color: #10b981;
+}
+
+/* Dark Mode Wallet Modal */
+[data-theme="dark"] .wallet-modal {
+  background: #141c2e;
+  border-color: #2d3c58;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .wallet-modal-header {
+  background: #101726;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .wallet-modal-header h2 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .wallet-topup-section h3,
+[data-theme="dark"] .wallet-history-section h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .topup-chip {
+  background: #1c273e;
+  border-color: #2d3c58;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .topup-chip:hover {
+  background: #253350;
+  border-color: #10b981;
+  color: #34d399;
+}
+
+[data-theme="dark"] .topup-input-wrap input {
+  background: #1c273e;
+  border-color: #2d3c58;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .tx-item {
+  background: #1c273e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .tx-icon-wrap {
+  background: #253350;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .tx-info strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .tx-info small {
+  color: #94a3b8;
+}
+
+/* Dark Mode Invoice Modal */
+[data-theme="dark"] .invoice-modal {
+  background: #141c2e;
+  border-color: #2d3c58;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .invoice-modal-header {
+  background: #101726;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .invoice-modal-header h2 {
+  color: #f8fafc;
+}
+
+/* Dark Mode Product Reviews & Rating Modal */
+[data-theme="dark"] .product-rating-row strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .product-reviews-section {
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .reviews-section-header h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .reviews-summary-card,
+[data-theme="dark"] .add-review-card,
+[data-theme="dark"] .customer-review-card {
+  background: #1c273e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .big-rating-number {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .bar-bg {
+  background: #253350;
+}
+
+[data-theme="dark"] .add-review-card h4 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .add-review-card textarea {
+  background: #141c2e;
+  border-color: #2d3c58;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .author-meta strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .review-text-content {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .order-rating-modal {
+  background: #141c2e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .order-rating-header {
+  background: #101726;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .order-rating-header h2 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .rate-rider-card {
+  background: #1c273e;
+  border-color: #2d3c58;
+}
+
+[data-theme="dark"] .rate-rider-details strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .star-rating-group label {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-invoice,
+[data-theme="dark"] .btn-rate-order {
+  background: #253350;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .btn-invoice:hover {
+  background: #334155;
+  border-color: #10b981;
+  color: #10b981;
+}
+
+[data-theme="dark"] .btn-rate-order:hover {
+  background: #334155;
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+/* ==========================================================================
+   PRINT STYLES FOR TAX INVOICE RECEIPT
+   ========================================================================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .invoice-modal,
+  .invoice-modal * {
+    visibility: visible;
+  }
+
+  .invoice-modal {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    transform: none !important;
+  }
+
+  .no-print,
+  .invoice-modal-header,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  .invoice-sheet {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
